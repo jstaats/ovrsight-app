@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ovrsight.ai — Sales Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#0c0e12;
+  --surface:#111318;
+  --surface2:#171b22;
+  --surface3:#1d2028;
+  --line:#ffffff08;
+  --line2:#ffffff12;
+  --text:#d8dce8;
+  --text2:#8b909e;
+  --text3:#4a4f5e;
+  --green:#19c97a;
+  --green-dim:#19c97a18;
+  --green-line:#19c97a28;
+  --red:#e85555;
+  --red-dim:#e8555518;
+  --red-line:#e8555528;
+  --amber:#e8a020;
+  --amber-dim:#e8a02018;
+  --amber-line:#e8a02028;
+  --blue:#5b9cf6;
+  --blue-dim:#5b9cf618;
+  --white:#ffffff;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;display:flex;flex-direction:column}
+
+/* TOAST */
+.toast{position:fixed;top:68px;right:20px;z-index:999;background:var(--surface2);border:0.5px solid var(--red-line);border-radius:10px;padding:12px 16px;max-width:280px;transform:translateX(320px);transition:transform 0.35s ease;cursor:pointer;box-shadow:0 4px 24px #00000066}
+.toast.show{transform:translateX(0)}
+.toast-label{font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;font-family:'DM Mono',monospace}
+.toast-title{font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px}
+.toast-body{font-size:11px;color:var(--text2)}
+
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:#00000060;z-index:200;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:460px;background:var(--surface);border-left:0.5px solid var(--line2);z-index:201;transform:translateX(460px);transition:transform 0.3s ease;overflow-y:auto;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:24px;border-bottom:0.5px solid var(--line);display:flex;align-items:center;gap:14px;flex-shrink:0}
+.drawer-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;background:var(--surface3);color:var(--text2)}
+.drawer-name{font-size:15px;font-weight:500;color:var(--white)}
+.drawer-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.drawer-score-wrap{margin-left:auto;text-align:right}
+.drawer-score{font-size:28px;font-weight:300;line-height:1}
+.drawer-score-label{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.drawer-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;padding:4px;margin-left:8px;line-height:1;flex-shrink:0}
+.drawer-close:hover{color:var(--text)}
+.drawer-body{padding:24px;flex:1}
+.drawer-section{margin-bottom:28px}
+.drawer-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace;margin-bottom:14px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:1px}
+.info-cell{background:var(--surface2);padding:10px 14px}
+.info-cell-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;font-family:'DM Mono',monospace}
+.info-cell-value{font-size:12px;color:var(--text);font-weight:400}
+.ai-box{background:var(--surface2);border-radius:8px;padding:14px 16px;border-left:2px solid var(--green)}
+.ai-box-label{font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:0.8px;font-family:'DM Mono',monospace;margin-bottom:8px}
+.ai-box-text{font-size:12px;color:var(--text);line-height:1.65}
+.ai-box-followup{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--line2);display:flex;justify-content:space-between;align-items:center}
+.ai-box-followup-label{font-size:11px;color:var(--text2)}
+.ai-box-followup-date{font-size:12px;color:var(--green);font-family:'DM Mono',monospace}
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--line)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-icon{width:26px;height:26px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.timeline-content{flex:1}
+.timeline-title{font-size:12px;color:var(--text);margin-bottom:2px}
+.timeline-sub{font-size:11px;color:var(--text2)}
+.timeline-time{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap;padding-top:2px}
+.web-item{padding:10px 0;border-bottom:0.5px solid var(--line)}
+.web-item:last-child{border-bottom:none}
+.web-item-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.web-item-page{font-size:12px;color:var(--text)}
+.web-item-time{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
+.web-item-detail{font-size:11px;color:var(--text2)}
+.web-duration{display:inline-block;font-size:10px;color:var(--green);background:var(--green-dim);border-radius:4px;padding:1px 6px;margin-top:3px;font-family:'DM Mono',monospace}
+.log-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.log-select,.log-textarea{width:100%;background:var(--surface2);border:0.5px solid var(--line2);border-radius:7px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;transition:border-color 0.15s}
+.log-select:focus,.log-textarea:focus{border-color:var(--green-line)}
+.log-textarea{resize:none;height:72px;margin-bottom:8px}
+.log-textarea::placeholder{color:var(--text3)}
+.log-btn{width:100%;background:var(--green);color:#000;border:none;border-radius:7px;padding:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:opacity 0.15s}
+.log-btn:hover{opacity:0.88}
+.drawer-footer{padding:16px 24px;border-top:0.5px solid var(--line);display:flex;gap:8px;flex-shrink:0}
+.dfooter-btn{flex:1;border-radius:7px;padding:9px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:opacity 0.15s;border:0.5px solid}
+.dfooter-btn:hover{opacity:0.85}
+.dfooter-btn.primary{background:var(--green);color:#000;border-color:var(--green)}
+.dfooter-btn.secondary{background:transparent;color:var(--text2);border-color:var(--line2)}
+
+/* TOPBAR */
+.topbar{height:52px;background:var(--surface);border-bottom:0.5px solid var(--line);padding:0 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-mark{width:26px;height:26px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:13px;height:13px}
+.logo-name{font-size:15px;font-weight:500;color:var(--white);letter-spacing:-0.3px}
+.logo-name span{color:var(--green)}
+.topbar-sep{width:0.5px;height:20px;background:var(--line2)}
+.topbar-greeting{font-size:13px;color:var(--text2)}
+.topbar-greeting strong{color:var(--text);font-weight:500}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);padding:3px 8px;border-radius:20px;background:var(--green-dim)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.topbar-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.user-pill{display:flex;align-items:center;gap:8px}
+.user-dot{width:28px;height:28px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--green)}
+.user-label{font-size:12px;color:var(--text);font-weight:500}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:176px;background:var(--surface);border-right:0.5px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.nav-group-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;padding:0 8px;margin-bottom:4px;margin-top:20px;font-family:'DM Mono',monospace}
+.nav-group-label:first-child{margin-top:0}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;color:var(--text2);font-size:12.5px;transition:background 0.12s,color 0.12s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.nav-btn:hover{background:var(--surface2);color:var(--text)}
+.nav-btn.active{background:var(--green-dim);color:var(--green)}
+.nav-btn-badge{margin-left:auto;font-size:10px;font-weight:500;padding:1px 5px;border-radius:5px;font-family:'DM Mono',monospace;background:var(--red);color:#fff}
+.sidebar-bottom{margin-top:auto;padding-top:16px}
+.sidebar-kpi{background:var(--surface2);border-radius:8px;padding:12px 14px}
+.sidebar-kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;font-family:'DM Mono',monospace}
+.sidebar-kpi-value{font-size:22px;font-weight:300;color:var(--green);line-height:1}
+.sidebar-kpi-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.main-inner{padding:24px;max-width:1100px;display:flex;flex-direction:column;gap:20px}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:center;justify-content:space-between}
+.page-title{font-size:18px;font-weight:500;color:var(--white)}
+.page-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.header-right{display:flex;gap:8px}
+.hbtn{border:none;border-radius:7px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:opacity 0.12s}
+.hbtn.primary{background:var(--green);color:#000;font-weight:500}
+.hbtn.ghost{background:var(--surface2);color:var(--text2);border:0.5px solid var(--line2)}
+.hbtn:hover{opacity:0.85}
+
+/* URGENT SECTION */
+.urgent-wrap{background:var(--surface);border-radius:12px;overflow:hidden}
+.urgent-header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:0.5px solid var(--line)}
+.urgent-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:urgPulse 1.4s ease-in-out infinite;flex-shrink:0}
+@keyframes urgPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.5}}
+.urgent-header-title{font-size:13px;font-weight:500;color:var(--white);flex:1}
+.urgent-header-count{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace}
+.urgent-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.urgent-card{background:var(--surface);padding:16px 18px;cursor:pointer;transition:background 0.12s;display:flex;flex-direction:column;gap:10px}
+.urgent-card:hover{background:var(--surface2)}
+.uc-top{display:flex;align-items:center;gap:10px}
+.uc-avatar{width:32px;height:32px;border-radius:50%;background:var(--red-dim);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--red);flex-shrink:0}
+.uc-name{font-size:13px;font-weight:500;color:var(--white);line-height:1.3}
+.uc-source{font-size:11px;color:var(--text2)}
+.uc-score{font-size:22px;font-weight:300;color:var(--red);margin-left:auto;line-height:1}
+.uc-signals{display:flex;flex-direction:column;gap:5px}
+.uc-signal{display:flex;align-items:baseline;gap:6px;font-size:11px;color:var(--text2)}
+.uc-signal-icon{font-size:11px;flex-shrink:0}
+.uc-signal strong{color:var(--text);font-weight:500}
+.uc-action{font-size:11px;color:var(--text2);padding-top:8px;border-top:0.5px solid var(--line)}
+.uc-action span{color:var(--green)}
+.uc-btns{display:flex;gap:6px;margin-top:4px}
+.uc-btn{font-size:11px;padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:opacity 0.12s}
+.uc-btn:hover{opacity:0.85}
+.uc-btn.call{background:var(--green);color:#000}
+.uc-btn.text{background:var(--surface3);color:var(--text2)}
+.uc-btn.view{background:var(--surface3);color:var(--text2)}
+.uc-empty{padding:32px;text-align:center;color:var(--text2);font-size:12px;grid-column:span 3}
+.uc-empty-icon{font-size:24px;margin-bottom:8px;opacity:0.4}
+
+/* PIPELINE SECTION */
+.pipeline-wrap{background:var(--surface);border-radius:12px;overflow:hidden}
+.pipeline-header{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:0.5px solid var(--line)}
+.pipeline-title{font-size:13px;font-weight:500;color:var(--white);flex:1}
+.pipeline-pill{font-size:10px;color:var(--text2);background:var(--surface2);border-radius:5px;padding:2px 8px;font-family:'DM Mono',monospace}
+.pipeline-pill.green{color:var(--green);background:var(--green-dim)}
+
+/* FILTER TABS */
+.filter-row{display:flex;padding:0 20px;border-bottom:0.5px solid var(--line);overflow-x:auto;gap:0}
+.ftab{padding:9px 14px;font-size:12px;cursor:pointer;color:var(--text2);border-bottom:1.5px solid transparent;white-space:nowrap;transition:color 0.12s;display:flex;align-items:center;gap:5px}
+.ftab:hover{color:var(--text)}
+.ftab.active{color:var(--white);border-bottom-color:var(--green)}
+.ftab-count{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3)}
+.ftab.active .ftab-count{color:var(--green)}
+
+/* TABLE HEADER */
+.table-head{display:grid;grid-template-columns:36px 200px 1fr 1fr 130px 80px;gap:0;padding:8px 20px;background:var(--surface);border-bottom:0.5px solid var(--line)}
+.table-head span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;font-family:'DM Mono',monospace}
+
+/* LEAD ROWS */
+.lead-row{display:grid;grid-template-columns:36px 200px 1fr 1fr 130px 80px;gap:0;padding:12px 20px;border-bottom:0.5px solid var(--line);cursor:pointer;transition:background 0.1s;align-items:center}
+.lead-row:last-child{border-bottom:none}
+.lead-row:hover{background:var(--surface2)}
+.lead-row.is-overdue{border-left:2px solid var(--red)}
+.lead-row.is-today{border-left:2px solid var(--amber)}
+.lead-row.is-upcoming{border-left:2px solid var(--line2)}
+.lr-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;background:var(--surface3);color:var(--text2)}
+.lr-name{font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px;padding-right:16px}
+.lr-contact{font-size:11px;color:var(--text2);padding-right:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr-web{padding-right:16px}
+.lr-web-val{font-size:11px;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr-web-page{font-size:11px;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr-web-empty{font-size:11px;color:var(--text3)}
+.lr-contact-col{padding-right:16px}
+.lr-contact-val{font-size:11px;color:var(--text);margin-bottom:2px}
+.lr-contact-out{font-size:11px;color:var(--text2)}
+.lr-fu{text-align:right;padding-right:16px}
+.lr-fu-date{font-size:12px;font-weight:500;margin-bottom:2px}
+.lr-fu-date.overdue{color:var(--red)}
+.lr-fu-date.today{color:var(--amber)}
+.lr-fu-date.upcoming{color:var(--text2)}
+.lr-fu-date.none{color:var(--text3)}
+.lr-fu-sub{font-size:10px;color:var(--text3)}
+.lr-score{text-align:right}
+.lr-score-num{font-size:18px;font-weight:300;line-height:1;margin-bottom:3px}
+.lr-chip{display:inline-block;font-size:9px;border-radius:4px;padding:2px 5px;font-weight:500}
+.lr-chip.critical{background:var(--red-dim);color:var(--red)}
+.lr-chip.high{background:var(--amber-dim);color:var(--amber)}
+.lr-chip.normal{background:var(--blue-dim);color:var(--blue)}
+.lr-chip.low{background:var(--surface3);color:var(--text3)}
+
+/* LOADING / EMPTY */
+.loading{padding:40px;text-align:center;color:var(--text2);font-size:12px}
+.spin{display:inline-block;width:14px;height:14px;border:1.5px solid var(--line2);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{padding:40px;text-align:center;color:var(--text2);font-size:12px}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* MESSAGING */
+.msg-thread{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;padding:4px 0 12px;margin-bottom:12px}
+.msg-bubble{display:flex;flex-direction:column;max-width:85%}
+.msg-bubble.outbound{align-self:flex-end;align-items:flex-end}
+.msg-bubble.inbound{align-self:flex-start;align-items:flex-start}
+.msg-bubble.ai-auto{align-self:flex-end;align-items:flex-end}
+.msg-text{padding:9px 13px;border-radius:12px;font-size:12px;line-height:1.55}
+.msg-bubble.outbound .msg-text{background:var(--green);color:#000;border-radius:12px 12px 3px 12px}
+.msg-bubble.inbound .msg-text{background:var(--surface3);color:var(--text);border-radius:12px 12px 12px 3px}
+.msg-bubble.ai-auto .msg-text{background:#1a2a20;color:var(--green);border-radius:12px 12px 3px 12px;border:0.5px solid var(--green-line)}
+.msg-meta{font-size:10px;color:var(--text3);margin-top:3px;font-family:"DM Mono",monospace}
+.msg-ai-label{font-size:9px;color:var(--green);opacity:0.7;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px}
+.msg-empty{font-size:12px;color:var(--text3);text-align:center;padding:20px 0;font-style:italic}
+.handoff-alert{background:var(--amber-dim);border:0.5px solid var(--amber-line);border-radius:8px;padding:10px 12px;margin:8px 0;display:flex;gap:8px;align-items:flex-start}
+.handoff-icon{font-size:14px;flex-shrink:0}
+.handoff-body{flex:1}
+.handoff-title{font-size:12px;font-weight:500;color:var(--amber);margin-bottom:2px}
+.handoff-detail{font-size:11px;color:var(--text2)}
+.ai-suggestion{background:var(--surface2);border:0.5px solid var(--green-line);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.ai-suggestion-label{font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;font-family:"DM Mono",monospace}
+.ai-suggestion-text{font-size:12px;color:var(--text);line-height:1.55;margin-bottom:8px}
+.ai-suggestion-btns{display:flex;gap:6px}
+.ai-sug-btn{font-size:11px;padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-family:"DM Sans",sans-serif;font-weight:500;transition:opacity 0.15s}
+.ai-sug-btn.send{background:var(--green);color:#000}
+.ai-sug-btn.edit{background:var(--surface3);color:var(--text2);border:0.5px solid var(--line2)}
+.msg-compose{display:flex;gap:8px;align-items:flex-end}
+.msg-input{flex:1;background:var(--surface2);border:0.5px solid var(--line2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:"DM Sans",sans-serif;font-size:12px;outline:none;resize:none;min-height:38px;max-height:100px;transition:border-color 0.15s;line-height:1.5}
+.msg-input:focus{border-color:var(--green-line)}
+.msg-input::placeholder{color:var(--text3)}
+.msg-send-btn{background:var(--green);color:#000;border:none;border-radius:8px;padding:9px 14px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;flex-shrink:0}
+.msg-send-btn:disabled{opacity:0.4;cursor:not-allowed}
+.msg-compose-label{font-size:10px;color:var(--text3);margin-bottom:6px;font-family:"DM Mono",monospace}
+.auto-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:0.5px solid var(--line);border-radius:7px;padding:8px 12px;margin-bottom:10px}
+.auto-toggle-label{font-size:11px;color:var(--text2)}
+.toggle{position:relative;width:30px;height:17px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:var(--surface3);border-radius:17px;cursor:pointer;transition:background 0.2s}
+.toggle-slider::before{content:"";position:absolute;width:13px;height:13px;left:2px;top:2px;background:var(--text3);border-radius:50%;transition:transform 0.2s,background 0.2s}
+.toggle input:checked+.toggle-slider{background:var(--green-dim);border:0.5px solid var(--green-line)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(13px);background:var(--green)}
+.note-section{margin-top:12px;padding-top:12px;border-top:0.5px solid var(--line)}
+
+@media(max-width:860px){
+  .sidebar{display:none}
+  .table-head,.lead-row{grid-template-columns:30px 1fr 100px}
+  .lr-web,.lr-contact-col,.lr-fu{display:none}
+  .urgent-cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast" onclick="document.getElementById('toast').classList.remove('show')">
+  <div class="toast-label" id="toast-label">Live Alert</div>
+  <div class="toast-title" id="toast-title">—</div>
+  <div class="toast-body" id="toast-body">—</div>
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-avatar" id="d-avatar">—</div>
+    <div>
+      <div class="drawer-name" id="d-name">—</div>
+      <div class="drawer-meta" id="d-meta">—</div>
+    </div>
+    <div class="drawer-score-wrap">
+      <div class="drawer-score" id="d-score">—</div>
+      <div class="drawer-score-label">heat score</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">AI Recommendation</div>
+      <div class="ai-box">
+        <div class="ai-box-label">Ovrsight Intelligence</div>
+        <div class="ai-box-text" id="d-ai-text">—</div>
+        <div class="ai-box-followup">
+          <div class="ai-box-followup-label">AI recommended follow-up</div>
+          <div class="ai-box-followup-date" id="d-fu-date">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Lead Info</div>
+      <div class="info-row">
+        <div class="info-cell"><div class="info-cell-label">Source</div><div class="info-cell-value" id="d-source">—</div></div>
+        <div class="info-cell"><div class="info-cell-label">Stage</div><div class="info-cell-value" id="d-stage">—</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell"><div class="info-cell-label">Phone</div><div class="info-cell-value" id="d-phone">—</div></div>
+        <div class="info-cell"><div class="info-cell-label">Email</div><div class="info-cell-value" id="d-email" style="font-size:11px;word-break:break-all">—</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell"><div class="info-cell-label">Lead added</div><div class="info-cell-value" id="d-created">—</div></div>
+        <div class="info-cell"><div class="info-cell-label">Last active</div><div class="info-cell-value" id="d-active">—</div></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Website Activity</div>
+      <div id="d-web">—</div>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Contact History</div>
+      <div id="d-timeline">—</div>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-section-label">Text Messages</div>
+
+      <!-- AUTO SEQUENCE TOGGLE -->
+      <div class="auto-toggle">
+        <div class="auto-toggle-label">Auto reengagement sequence <span id="auto-status">Off</span></div>
+        <label class="toggle">
+          <input type="checkbox" id="auto-toggle-input" onchange="toggleAutoSequence(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- CONVERSATION THREAD -->
+      <div class="msg-thread" id="msg-thread">
+        <div class="msg-empty" id="msg-empty">No messages yet — start a conversation below</div>
+      </div>
+
+      <!-- HANDOFF ALERT (hidden by default) -->
+      <div class="handoff-alert" id="handoff-alert" style="display:none">
+        <div class="handoff-icon">⚡</div>
+        <div class="handoff-body">
+          <div class="handoff-title" id="handoff-title">Buying signal detected</div>
+          <div class="handoff-detail" id="handoff-detail">This lead is ready for a human touch — respond personally now</div>
+        </div>
+      </div>
+
+      <!-- AI SUGGESTION -->
+      <div class="ai-suggestion" id="ai-suggestion" style="display:none">
+        <div class="ai-suggestion-label">⚡ AI suggested response</div>
+        <div class="ai-suggestion-text" id="ai-suggestion-text">—</div>
+        <div class="ai-suggestion-btns">
+          <button class="ai-sug-btn send" onclick="sendAISuggestion()">Send This</button>
+          <button class="ai-sug-btn edit" onclick="editAISuggestion()">Edit First</button>
+          <button class="ai-sug-btn edit" onclick="generateNewSuggestion()">New Suggestion</button>
+        </div>
+      </div>
+
+      <!-- COMPOSE -->
+      <div class="msg-compose-label">Type a message or let AI draft one</div>
+      <div class="msg-compose">
+        <textarea class="msg-input" id="msg-input" placeholder="Type a message..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendManualText()}"></textarea>
+        <button class="msg-send-btn" onclick="sendManualText()" id="msg-send-btn">Send</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <button class="log-btn" onclick="generateAIDraft()" style="background:var(--surface2);color:var(--green);border:0.5px solid var(--green-line);font-size:11px;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif">⚡ AI Draft</button>
+        <button class="log-btn" onclick="sendInventoryAlert()" style="background:var(--surface2);color:var(--text2);border:0.5px solid var(--line2);font-size:11px;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif">🚗 Inventory Alert</button>
+        <button class="log-btn" onclick="sendPriceDropAlert()" style="background:var(--surface2);color:var(--text2);border:0.5px solid var(--line2);font-size:11px;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif">💰 Price Drop</button>
+      </div>
+
+      <!-- NOTES -->
+      <div class="note-section">
+        <div class="drawer-section-label" style="margin-bottom:8px">Internal Note</div>
+        <textarea class="msg-input" id="d-log-notes" placeholder="Add a note — vehicle preferences, next steps, anything important..." style="min-height:60px;margin-bottom:8px"></textarea>
+        <button onclick="saveNoteFromDrawer()" style="background:var(--surface3);color:var(--text2);border:0.5px solid var(--line2);border-radius:6px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer">💾 Save Note</button>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px">Notes are internal only — leads never see these</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="dfooter-btn primary" onclick="generateAIDraft()">⚡ AI Draft Text</button>
+    <button class="dfooter-btn secondary" onclick="sendInventoryAlert()">🚗 Inventory Alert</button>
+    <button class="dfooter-btn secondary" onclick="document.getElementById('d-log-notes').focus()">📝 Note</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="9" r="2.5" fill="#000"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <span class="logo-name">Ovrsight<span>.ai</span></span>
+  </div>
+  <div class="topbar-sep"></div>
+  <div class="topbar-greeting">Good morning, <strong id="user-greeting">—</strong></div>
+  <div class="topbar-right">
+    <div class="live-pill"><div class="live-dot"></div>Live</div>
+    <div class="topbar-date" id="current-date"></div>
+    <div class="user-pill">
+      <div class="user-dot" id="user-dot">—</div>
+      <div class="user-label" id="user-label">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="nav-group-label">My Day</div>
+  <button class="nav-btn active" id="nav-all" onclick="navClick('all','nav-all')">📋 Dashboard</button>
+  <button class="nav-btn" id="nav-hot" onclick="navClick('hot','nav-hot')">🔥 Hot Leads <span class="nav-btn-badge" id="nav-hot-count">—</span></button>
+  <button class="nav-btn" id="nav-overdue" onclick="navClick('overdue','nav-overdue')">⏰ Overdue</button>
+  <button class="nav-btn" id="nav-today" onclick="navClick('today','nav-today')">📞 Due Today</button>
+
+  <div class="nav-group-label">Pipeline</div>
+  <button class="nav-btn" id="nav-new" onclick="navClick('new','nav-new')">🆕 New Leads</button>
+  <button class="nav-btn" id="nav-contacted" onclick="navClick('contacted','nav-contacted')">💬 Contacted</button>
+  <button class="nav-btn" id="nav-negotiating" onclick="navClick('negotiating','nav-negotiating')">🤝 Negotiating</button>
+  <button class="nav-btn" id="nav-closed" onclick="navClick('closed_won','nav-closed')">✅ Closed</button>
+
+  <div class="nav-group-label">Outreach</div>
+  <button class="nav-btn" onclick="alert('Coming soon')">💬 Text Leads</button>
+  <button class="nav-btn" onclick="alert('Coming soon')">📧 Email Leads</button>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-kpi">
+      <div class="sidebar-kpi-label">My Pipeline</div>
+      <div class="sidebar-kpi-value" id="sidebar-kpi-val">—</div>
+      <div class="sidebar-kpi-sub" id="sidebar-kpi-sub">—</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="main-inner">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title" id="page-title">My Lead Dashboard</div>
+      <div class="page-sub" id="page-sub">Loading your pipeline...</div>
+    </div>
+    <div class="header-right">
+      <button class="hbtn ghost" onclick="loadDashboard()">↺ Refresh</button>
+      <button class="hbtn primary">+ Add Note</button>
+    </div>
+  </div>
+
+  <!-- URGENT CALLS -->
+  <div class="urgent-wrap">
+    <div class="urgent-header">
+      <div class="urgent-dot"></div>
+      <div class="urgent-header-title">Call These Leads Now</div>
+      <div class="urgent-header-count" id="urgent-count">—</div>
+    </div>
+    <div class="urgent-cards" id="urgent-cards">
+      <div class="loading" style="grid-column:span 3"><div class="spin"></div><br>Loading...</div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipeline-wrap">
+    <div class="pipeline-header">
+      <div class="pipeline-title">Full Pipeline</div>
+      <div class="pipeline-pill" id="pipeline-count">—</div>
+      <div class="pipeline-pill green">Follow-ups set by AI</div>
+    </div>
+    <div class="filter-row">
+      <div class="ftab active" id="ftab-all" onclick="filterLeads('all',this)">All <span class="ftab-count" id="fc-all">—</span></div>
+      <div class="ftab" id="ftab-overdue" onclick="filterLeads('overdue',this)">Overdue <span class="ftab-count" id="fc-overdue">—</span></div>
+      <div class="ftab" id="ftab-today" onclick="filterLeads('today',this)">Due Today <span class="ftab-count" id="fc-today">—</span></div>
+      <div class="ftab" id="ftab-new" onclick="filterLeads('new',this)">New <span class="ftab-count" id="fc-new">—</span></div>
+      <div class="ftab" id="ftab-contacted" onclick="filterLeads('contacted',this)">Contacted <span class="ftab-count" id="fc-contacted">—</span></div>
+      <div class="ftab" id="ftab-negotiating" onclick="filterLeads('negotiating',this)">Negotiating <span class="ftab-count" id="fc-negotiating">—</span></div>
+    </div>
+    <div class="table-head">
+      <span></span><span>Lead</span><span>Last Website Visit</span><span>Last Contact</span><span>Follow-up Due</span><span style="text-align:right">Score</span>
+    </div>
+    <div id="pipeline-rows">
+      <div class="loading"><div class="spin"></div><br>Loading your leads...</div>
+    </div>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+const SB = 'https://gmcpsuzkzlowztbtpuve.supabase.co';
+const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3BzdXpremxvd3p0YnRwdXZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQxMTMsImV4cCI6MjA5MjA0MDExM30.LCw9s76i625S88afpGnbZaelZ00bdwdXVpx6O4sld4k';
+const AK = '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';
+const sbH = {'apikey':SK,'Authorization':`Bearer ${SK}`,'Content-Type':'application/json','Prefer':'return=representation'};
+const aiH = {'Content-Type':'application/json','x-api-key':AK,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+
+let leads=[], interactions=[], aiMap={}, currentFilter='all', drawerLeadId=null;
+
+const mockWeb = [
+  [{page:'2025 Silverado LTZ',type:'vehicle detail',dur:8,time:'Today 9:14am'},{page:'Finance Calculator',type:'finance',dur:3,time:'Yesterday 4:22pm'},{page:'Search: trucks under $60k',type:'search',dur:2,time:'Yesterday 4:18pm'}],
+  [{page:'2024 Ford Escape SE',type:'vehicle detail',dur:5,time:'Yesterday 2:30pm'},{page:'Compare vehicles',type:'search',dur:2,time:'2 days ago'}],
+  [{page:'Homepage',type:'home page',dur:1,time:'3 days ago'}]
+];
+
+async function get(path){
+  try{const r=await fetch(`${SB}/rest/v1/${path}`,{headers:sbH});return r.ok?r.json():[];}catch{return[];}
+}
+
+function scoreColor(s){
+  if(s>=80)return'var(--red)';
+  if(s>=60)return'var(--amber)';
+  if(s>=40)return'var(--blue)';
+  return'var(--text3)';
+}
+
+function chipClass(s){
+  if(s>=80)return'critical';if(s>=60)return'high';if(s>=40)return'normal';return'low';
+}
+
+function chipLabel(s){
+  if(s>=80)return'Critical';if(s>=60)return'High';if(s>=40)return'Normal';return'Low';
+}
+
+function ini(f,l){return`${(f||'?')[0]}${(l||'?')[0]}`.toUpperCase();}
+
+function ago(d){
+  if(!d)return'—';
+  const m=Math.floor((Date.now()-new Date(d))/60000);
+  if(m<1)return'Just now';if(m<60)return`${m}m ago`;
+  if(m<1440)return`${Math.floor(m/60)}h ago`;
+  return`${Math.floor(m/1440)}d ago`;
+}
+
+function fuDate(lead){
+  const s=lead.heat_score||0;
+  const days=Math.floor((Date.now()-new Date(lead.last_activity||lead.created_at))/86400000);
+  if(s>=80)return{label:'Today',status:'today',sub:'Urgent — call now'};
+  if(s>=60){
+    if(days>=2)return{label:'Overdue',status:'overdue',sub:`${days} days since contact`};
+    return{label:'Today',status:'today',sub:'Follow up within 24hrs'};
+  }
+  if(s>=40){
+    if(days>=5)return{label:'Overdue',status:'overdue',sub:`${days} days — going cold`};
+    const d=new Date(Date.now()+2*86400000);
+    return{label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),status:'upcoming',sub:'In 2 days'};
+  }
+  if(days>=14)return{label:'Overdue',status:'overdue',sub:`${days} days — reactivate`};
+  const d=new Date(Date.now()+7*86400000);
+  return{label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),status:'upcoming',sub:'Weekly nurture'};
+}
+
+function rowClass(lead){
+  const fu=fuDate(lead);
+  if(fu.status==='overdue')return'is-overdue';
+  if(fu.status==='today')return'is-today';
+  return'is-upcoming';
+}
+
+function lastContact(leadId){
+  const ix=interactions.filter(i=>i.lead_id===leadId);
+  if(!ix.length)return{val:'Never contacted',out:'No history'};
+  const l=ix[0];
+  return{val:`${(l.type||'contact').replace('_',' ')} · ${ago(l.occurred_at)}`,out:(l.outcome||'no outcome').replace(/_/g,' ')};
+}
+
+function openDrawer(lead, index){
+  drawerLeadId=lead.id;
+  const s=lead.heat_score||0;
+  const fu=fuDate(lead);
+  const ai=aiMap[lead.id];
+  const ix=interactions.filter(i=>i.lead_id===lead.id);
+  const web=mockWeb[index]||[];
+
+  document.getElementById('d-avatar').textContent=ini(lead.first_name,lead.last_name);
+  document.getElementById('d-avatar').style.cssText=`background:var(--surface3);color:var(--green);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0`;
+  document.getElementById('d-name').textContent=`${lead.first_name} ${lead.last_name}`;
+  document.getElementById('d-meta').textContent=`${(lead.source||'unknown').replace(/_/g,' ')} · ${lead.stage||'new'} · Added ${ago(lead.created_at)}`;
+  document.getElementById('d-score').textContent=s||'—';
+  document.getElementById('d-score').style.color=scoreColor(s);
+  document.getElementById('d-source').textContent=(lead.source||'unknown').replace(/_/g,' ');
+  document.getElementById('d-stage').textContent=lead.stage||'new';
+  document.getElementById('d-phone').textContent=lead.phone||'No phone on file';
+  document.getElementById('d-email').textContent=lead.email||'No email on file';
+  document.getElementById('d-created').textContent=new Date(lead.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('d-active').textContent=ago(lead.last_activity);
+  document.getElementById('d-fu-date').textContent=fu.label;
+  document.getElementById('d-ai-text').textContent=ai?.reasoning||'Run the AI scoring engine to generate a personalized recommendation for this lead.';
+  document.getElementById('d-call-btn') && (document.getElementById('d-call-btn').onclick=()=>{});
+
+  document.getElementById('d-web').innerHTML=web.length?web.map(w=>`
+    <div class="web-item">
+      <div class="web-item-top"><div class="web-item-page">${w.page}</div><div class="web-item-time">${w.time}</div></div>
+      <div class="web-item-detail">${w.type} · ${w.dur} min on page</div>
+      ${w.dur>=5?`<div class="web-duration">⏱ ${w.dur} min — high intent</div>`:''}
+    </div>`).join(''):'<div style="font-size:12px;color:var(--text2);padding:8px 0">No website activity tracked yet. Will appear here once the tracking pixel is installed on the dealership website.</div>';
+
+  document.getElementById('d-timeline').innerHTML=ix.length?ix.slice(0,6).map(i=>`
+    <div class="timeline-item">
+      <div class="timeline-icon">${i.type==='call'?'📞':i.type==='text'?'💬':i.type==='email'?'📧':'📋'}</div>
+      <div class="timeline-content">
+        <div class="timeline-title">${(i.type||'interaction').replace('_',' ')} — ${(i.outcome||'no outcome').replace(/_/g,' ')}</div>
+        <div class="timeline-sub">${i.summary||'No notes logged'}</div>
+      </div>
+      <div class="timeline-time">${ago(i.occurred_at)}</div>
+    </div>`).join(''):'<div style="font-size:12px;color:var(--text2);padding:8px 0">No interactions logged yet. Use the form below to track your first contact.</div>';
+
+  loadMessages(lead, index);
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  drawerLeadId=null;
+}
+
+async function saveNoteFromDrawer(){
+  if(!drawerLeadId)return;
+  const notes=document.getElementById('d-log-notes').value.trim();
+  if(!notes){alert('Please add a note first.');return;}
+  const btn=event.target;
+  btn.textContent='Saving...';btn.disabled=true;
+  await fetch(`${SB}/rest/v1/interactions`,{method:'POST',headers:sbH,body:JSON.stringify({lead_id:drawerLeadId,type:'note',direction:'internal',outcome:'note_added',summary:notes})});
+  await fetch(`${SB}/rest/v1/leads?id=eq.${drawerLeadId}`,{method:'PATCH',headers:sbH,body:JSON.stringify({last_activity:new Date().toISOString()})});
+  btn.textContent='✓ Saved';
+  document.getElementById('d-log-notes').value='';
+  setTimeout(()=>{btn.textContent='💾 Save Note';btn.disabled=false;},1500);
+}
+
+function openLogDrawer(){
+  if(leads.length>0)openDrawer(leads[0],0);
+  else alert('No leads in your pipeline yet.');
+}
+
+function navClick(filter, id){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  currentFilter=filter;
+  const tabMap={all:"ftab-all",hot:"ftab-all",overdue:"ftab-overdue",today:"ftab-today",new:"ftab-new",contacted:"ftab-contacted",negotiating:"ftab-negotiating",closed_won:"ftab-all"};
+  document.querySelectorAll(".ftab").forEach(t=>t.classList.remove("active"));
+  const targetTab=tabMap[filter];
+  if(targetTab)document.getElementById(targetTab)?.classList.add("active");
+  renderPipeline(filter);
+  document.querySelector(".pipeline-wrap").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function filterLeads(filter, tab){
+  currentFilter=filter;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  // sync sidebar
+  const map={all:'nav-all',overdue:'nav-overdue',today:'nav-today',new:'nav-new',contacted:'nav-contacted',negotiating:'nav-negotiating',closed_won:'nav-closed',hot:'nav-hot'};
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(map[filter])document.getElementById(map[filter])?.classList.add('active');
+  renderPipeline(filter);
+}
+
+function renderPipeline(filter){
+  let rows=leads;
+  if(filter==='hot')rows=leads.filter(l=>(l.heat_score||0)>=80);
+  else if(filter==='overdue')rows=leads.filter(l=>fuDate(l).status==='overdue');
+  else if(filter==='today')rows=leads.filter(l=>fuDate(l).status==='today');
+  else if(filter==='new')rows=leads.filter(l=>l.status==='new');
+  else if(filter==='contacted')rows=leads.filter(l=>l.status==='contacted'||l.stage==='contacted');
+  else if(filter==='negotiating')rows=leads.filter(l=>l.stage==='negotiating');
+  else if(filter==='closed_won')rows=leads.filter(l=>l.status==='closed_won');
+
+  document.getElementById('pipeline-count').textContent=`${rows.length} leads`;
+
+  if(!rows.length){
+    document.getElementById('pipeline-rows').innerHTML='<div class="empty">No leads in this category</div>';
+    return;
+  }
+
+  document.getElementById('pipeline-rows').innerHTML=rows.map(lead=>{
+    const i=leads.indexOf(lead);
+    const s=lead.heat_score||0;
+    const fu=fuDate(lead);
+    const lc=lastContact(lead.id);
+    const web=mockWeb[i]||[];
+    const webVal=web.length?`<div class="lr-web-val">${web[0].time}</div><div class="lr-web-page">${web[0].page}</div>`:'<div class="lr-web-empty">No visits tracked</div>';
+    return `<div class="lead-row ${rowClass(lead)}" onclick="openDrawer(leads[${i}],${i})">
+      <div class="lr-avatar">${ini(lead.first_name,lead.last_name)}</div>
+      <div>
+        <div class="lr-name">${lead.first_name} ${lead.last_name}</div>
+        <div class="lr-contact">${lead.phone||lead.email||'No contact info'}</div>
+      </div>
+      <div class="lr-web">${webVal}</div>
+      <div class="lr-contact-col">
+        <div class="lr-contact-val">${lc.val}</div>
+        <div class="lr-contact-out">${lc.out}</div>
+      </div>
+      <div class="lr-fu">
+        <div class="lr-fu-date ${fu.status}">${fu.label}</div>
+        <div class="lr-fu-sub">${fu.sub}</div>
+      </div>
+      <div class="lr-score">
+        <div class="lr-score-num" style="color:${scoreColor(s)}">${s||'—'}</div>
+        <div class="lr-chip ${chipClass(s)}">${chipLabel(s)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderUrgent(){
+  const urgent=leads.filter(l=>(l.heat_score||0)>=60);
+  document.getElementById('urgent-count').textContent=`${urgent.length} lead${urgent.length!==1?'s':''} flagged`;
+  document.getElementById('nav-hot-count').textContent=urgent.length;
+
+  if(!urgent.length){
+    document.getElementById('urgent-cards').innerHTML=`<div class="uc-empty"><div class="uc-empty-icon">✓</div>All caught up — no urgent leads right now</div>`;
+    return;
+  }
+
+  const cols=Math.min(urgent.length,3);
+  document.getElementById('urgent-cards').style.gridTemplateColumns=`repeat(${cols},1fr)`;
+
+  document.getElementById('urgent-cards').innerHTML=urgent.slice(0,3).map((lead,idx)=>{
+    const i=leads.indexOf(lead);
+    const s=lead.heat_score||0;
+    const fu=fuDate(lead);
+    const ai=aiMap[lead.id];
+    const web=mockWeb[i]||[];
+    const lc=lastContact(lead.id);
+    return `<div class="urgent-card" onclick="openDrawer(leads[${i}],${i})">
+      <div class="uc-top">
+        <div class="uc-avatar">${ini(lead.first_name,lead.last_name)}</div>
+        <div>
+          <div class="uc-name">${lead.first_name} ${lead.last_name}</div>
+          <div class="uc-source">${(lead.source||'unknown').replace(/_/g,' ')}</div>
+        </div>
+        <div class="uc-score">${s}</div>
+      </div>
+      <div class="uc-signals">
+        <div class="uc-signal"><span class="uc-signal-icon">🌐</span>Last on site: <strong>${web.length?web[0].time:'Not tracked yet'}</strong>${web.length?' — '+web[0].page:''}</div>
+        <div class="uc-signal"><span class="uc-signal-icon">📞</span>Last contact: <strong>${lc.val}</strong> — ${lc.out}</div>
+        <div class="uc-signal"><span class="uc-signal-icon">⏰</span>Follow-up: <strong>${fu.label}</strong> — ${fu.sub}</div>
+      </div>
+      ${ai?.recommended_action?`<div class="uc-action"><span>→</span> ${ai.recommended_action}</div>`:''}
+      <div class="uc-btns">
+        <button class="uc-btn text" onclick="event.stopPropagation();alert('AI text coming soon')">💬 Text</button>
+        <button class="uc-btn text" onclick="event.stopPropagation();alert('Email outreach coming soon')">📧 Email</button>
+        <button class="uc-btn view" onclick="event.stopPropagation();openDrawer(leads[${i}],${i})">View →</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateTabCounts(){
+  document.getElementById('fc-all').textContent=leads.length;
+  document.getElementById('fc-overdue').textContent=leads.filter(l=>fuDate(l).status==='overdue').length;
+  document.getElementById('fc-today').textContent=leads.filter(l=>fuDate(l).status==='today').length;
+  document.getElementById('fc-new').textContent=leads.filter(l=>l.status==='new').length;
+  document.getElementById('fc-contacted').textContent=leads.filter(l=>l.status==='contacted').length;
+  document.getElementById('fc-negotiating').textContent=leads.filter(l=>l.stage==='negotiating').length;
+}
+
+async function loadDashboard(){
+  document.getElementById('current-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+  const [fetchedLeads,users,scores,fetchedIx]=await Promise.all([
+    get('leads?select=*&order=heat_score.desc'),
+    get('users?select=*'),
+    get('ai_scores?select=*&order=scored_at.desc'),
+    get('interactions?select=*&order=occurred_at.desc')
+  ]);
+
+  leads=fetchedLeads;
+  interactions=fetchedIx;
+  aiMap={};
+  scores.forEach(s=>{if(!aiMap[s.lead_id])aiMap[s.lead_id]=s;});
+
+  const user=users.find(u=>u.role==='salesperson')||users[0];
+  if(user){
+    const p=user.full_name.split(' ');
+    document.getElementById('user-greeting').textContent=p[0];
+    document.getElementById('user-label').textContent=user.full_name;
+    document.getElementById('user-dot').textContent=`${(p[0]||'?')[0]}${(p[1]||'?')[0]}`.toUpperCase();
+  }
+
+  const hot=leads.filter(l=>(l.heat_score||0)>=80).length;
+  const overdue=leads.filter(l=>fuDate(l).status==='overdue').length;
+  document.getElementById('sidebar-kpi-val').textContent=leads.length;
+  document.getElementById('sidebar-kpi-sub').textContent=`${hot} hot · ${overdue} overdue`;
+  document.getElementById('page-sub').textContent=`${leads.length} leads · ${overdue} follow-ups overdue`;
+
+  updateTabCounts();
+  renderUrgent();
+  renderPipeline(currentFilter);
+
+  if(hot>0){
+    const hl=leads.find(l=>(l.heat_score||0)>=80);
+    setTimeout(()=>{
+      document.getElementById('toast-title').textContent=`${hl.first_name} ${hl.last_name} needs follow-up`;
+      document.getElementById('toast-body').textContent=`Score ${hl.heat_score} · Click to view their profile`;
+      document.getElementById('toast').classList.add('show');
+      setTimeout(()=>document.getElementById('toast').classList.remove('show'),5000);
+    },2500);
+  }
+}
+
+
+// ─── MESSAGING SYSTEM ───────────────────────────────────────────────
+const TWILIO_SID = 'AC8f8d4481d5bc835ee63780bfafb546a0';
+const TWILIO_TOKEN = 'af56112cfa6fbee006353238208e66ad';
+const TWILIO_FROM = '+18446608694';
+
+let currentMessages = [];
+let currentLeadPhone = null;
+let currentLeadName = null;
+let autoSequenceEnabled = false;
+
+function toggleAutoSequence(enabled) {
+  autoSequenceEnabled = enabled;
+  document.getElementById('auto-status').textContent = enabled ? 'On' : 'Off';
+  document.getElementById('auto-status').style.color = enabled ? 'var(--green)' : 'var(--text2)';
+  if (enabled && currentLeadPhone) {
+    showToastMsg('Auto reengagement sequence activated for ' + currentLeadName);
+  }
+}
+
+function showToastMsg(msg) {
+  document.getElementById('toast-title').textContent = msg;
+  document.getElementById('toast-body').textContent = 'Ovrsight will handle follow-up automatically';
+  document.getElementById('toast').classList.add('show');
+  setTimeout(() => document.getElementById('toast').classList.remove('show'), 4000);
+}
+
+function loadMessages(lead, index) {
+  currentLeadPhone = lead.phone || null;
+  currentLeadName = lead.first_name + ' ' + lead.last_name;
+
+  // Load messages from outreach_messages table
+  fetch(`${SB}/rest/v1/outreach_messages?lead_id=eq.${lead.id}&channel=eq.sms&select=*&order=sent_at.asc`, {headers: sbH})
+    .then(r => r.json())
+    .then(msgs => {
+      currentMessages = msgs;
+      renderThread(msgs, lead);
+    }).catch(() => {
+      renderThread([], lead);
+    });
+}
+
+function renderThread(msgs, lead) {
+  const thread = document.getElementById('msg-thread');
+  const empty = document.getElementById('msg-empty');
+
+  if (!msgs || msgs.length === 0) {
+    empty.style.display = 'block';
+    thread.innerHTML = '<div class="msg-empty">No messages yet — start the conversation below</div>';
+    document.getElementById('ai-suggestion').style.display = 'none';
+    document.getElementById('handoff-alert').style.display = 'none';
+    // Auto-generate a first draft
+    generateAIDraft();
+    return;
+  }
+
+  empty.style.display = 'none';
+  thread.innerHTML = msgs.map(m => {
+    const isOutbound = m.sent_by === 'ai' || m.sent_by === 'human';
+    const isAI = m.sent_by === 'ai';
+    const bubbleClass = isOutbound ? (isAI ? 'ai-auto' : 'outbound') : 'inbound';
+    const time = new Date(m.sent_at).toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+    return `<div class="msg-bubble ${bubbleClass}">
+      ${isAI ? '<div class="msg-ai-label">AI sent</div>' : ''}
+      <div class="msg-text">${m.body}</div>
+      <div class="msg-meta">${time} ${m.status === 'replied' ? '· Replied' : m.status === 'delivered' ? '· Delivered' : ''}</div>
+    </div>`;
+  }).join('');
+
+  // Scroll to bottom
+  thread.scrollTop = thread.scrollHeight;
+
+  // Check last message for handoff signals
+  const lastMsg = msgs[msgs.length - 1];
+  if (lastMsg && lastMsg.sent_by === 'lead') {
+    checkHandoff(lastMsg.body);
+    generateAIResponse(lastMsg.body);
+  }
+}
+
+function checkHandoff(replyText) {
+  const handoffPhrases = ['come in', 'visit', 'price', 'how much', 'best deal', 'available', 'test drive', 'saturday', 'sunday', 'appointment', 'schedule', 'when can', 'out the door', 'financing', 'trade'];
+  const lower = replyText.toLowerCase();
+  const triggered = handoffPhrases.find(p => lower.includes(p));
+  const alertEl = document.getElementById('handoff-alert');
+  if (triggered) {
+    alertEl.style.display = 'flex';
+    document.getElementById('handoff-title').textContent = 'Buying signal detected — take over now';
+    document.getElementById('handoff-detail').textContent = `Lead mentioned "${triggered}" — this conversation needs a personal touch`;
+  } else {
+    alertEl.style.display = 'none';
+  }
+}
+
+async function generateAIResponse(replyText) {
+  const lead = allLeads.find(l => l.phone === currentLeadPhone) || allLeads[0];
+  if (!lead) return;
+
+  const prompt = `You are an AI sales assistant for an automotive dealership. A lead just replied to your text message.
+
+Lead: ${currentLeadName}
+Their reply: "${replyText}"
+Vehicle interest: ${lead.source || 'unknown'}
+Stage: ${lead.stage || 'new'}
+
+Write a short, friendly, natural response (1-2 sentences max). Sound like a real person not a robot. If they ask about price, availability, or appointments — acknowledge it warmly and say the salesperson will follow up personally. End with an open question to keep the conversation going. No emojis.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':AK,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:150,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const suggestion = data.content.map(b => b.text || '').join('').trim();
+    document.getElementById('ai-suggestion-text').textContent = suggestion;
+    document.getElementById('ai-suggestion').style.display = 'block';
+  } catch(e) {
+    console.log('AI suggestion error:', e);
+  }
+}
+
+async function generateAIDraft() {
+  const lead = allLeads.find(l => l.phone === currentLeadPhone) || allLeads[0];
+  if (!lead) return;
+
+  const btn = event?.target;
+  if (btn) { btn.textContent = 'Generating...'; btn.disabled = true; }
+
+  const daysSince = Math.floor((Date.now() - new Date(lead.last_activity || lead.created_at)) / 86400000);
+
+  const prompt = `You are an AI sales assistant for an automotive dealership. Write a short reengagement text message to a car shopper.
+
+Lead name: ${currentLeadName}
+Days since last contact: ${daysSince}
+Lead source: ${lead.source || 'website'}
+Stage: ${lead.stage || 'new'}
+Heat score: ${lead.heat_score || 0}/100
+
+Write a natural, friendly SMS (2-3 sentences max). Do not use their last name. Sound like a helpful person not a salesperson. Include a soft call to action. Do not use emojis. End with mandatory opt-out: "Reply STOP to unsubscribe."`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':AK,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:200,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const draft = data.content.map(b => b.text || '').join('').trim();
+    document.getElementById('msg-input').value = draft;
+    document.getElementById('msg-input').style.height = 'auto';
+    document.getElementById('msg-input').style.height = document.getElementById('msg-input').scrollHeight + 'px';
+  } catch(e) {
+    document.getElementById('msg-input').value = `Hey ${currentLeadName?.split(' ')[0] || 'there'}, just checking in — are you still looking for a vehicle? We have some great options I think you would love. Reply STOP to unsubscribe.`;
+  }
+
+  if (btn) { btn.textContent = '⚡ AI Draft'; btn.disabled = false; }
+}
+
+async function sendInventoryAlert() {
+  const lead = allLeads.find(l => l.phone === currentLeadPhone) || allLeads[0];
+  if (!lead) return;
+  const msg = `Hey ${currentLeadName?.split(' ')[0] || 'there'}, we just got new inventory in that matches what you were looking at. Want me to send you a few options? Reply STOP to unsubscribe.`;
+  document.getElementById('msg-input').value = msg;
+}
+
+async function sendPriceDropAlert() {
+  const lead = allLeads.find(l => l.phone === currentLeadPhone) || allLeads[0];
+  if (!lead) return;
+  const msg = `Hey ${currentLeadName?.split(' ')[0] || 'there'}, the vehicle you were looking at just had a price reduction. Wanted to make sure you saw it before someone else does. Reply STOP to unsubscribe.`;
+  document.getElementById('msg-input').value = msg;
+}
+
+function sendAISuggestion() {
+  const text = document.getElementById('ai-suggestion-text').textContent;
+  document.getElementById('msg-input').value = text;
+  document.getElementById('ai-suggestion').style.display = 'none';
+  sendManualText();
+}
+
+function editAISuggestion() {
+  const text = document.getElementById('ai-suggestion-text').textContent;
+  document.getElementById('msg-input').value = text;
+  document.getElementById('msg-input').focus();
+  document.getElementById('ai-suggestion').style.display = 'none';
+}
+
+function generateNewSuggestion() {
+  generateAIDraft();
+  document.getElementById('ai-suggestion').style.display = 'none';
+}
+
+async function sendManualText() {
+  const body = document.getElementById('msg-input').value.trim();
+  if (!body) { alert('Please type a message first.'); return; }
+
+  if (!currentLeadPhone) {
+    alert('This lead has no phone number on file. Add one in your CRM first.');
+    return;
+  }
+
+  const btn = document.getElementById('msg-send-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    // Send via Twilio
+    const twilioRes = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(TWILIO_SID + ':' + TWILIO_TOKEN),
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        From: TWILIO_FROM,
+        To: currentLeadPhone,
+        Body: body
+      })
+    });
+
+    const twilioData = await twilioRes.json();
+
+    if (twilioData.sid) {
+      // Save to database
+      const lead = allLeads.find(l => l.phone === currentLeadPhone);
+      if (lead) {
+        await fetch(`${SB}/rest/v1/outreach_messages`, {
+          method: 'POST',
+          headers: sbH,
+          body: JSON.stringify({
+            lead_id: lead.id,
+            channel: 'sms',
+            body: body,
+            status: 'sent',
+            sent_by: 'human',
+            sent_at: new Date().toISOString()
+          })
+        });
+
+        // Update lead last activity
+        await fetch(`${SB}/rest/v1/leads?id=eq.${lead.id}`, {
+          method: 'PATCH',
+          headers: sbH,
+          body: JSON.stringify({ last_activity: new Date().toISOString(), status: 'contacted' })
+        });
+      }
+
+      // Add to thread visually
+      const thread = document.getElementById('msg-thread');
+      const empty = document.getElementById('msg-empty');
+      if (empty) empty.style.display = 'none';
+      const time = new Date().toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble outbound';
+      bubble.innerHTML = `<div class="msg-text">${body}</div><div class="msg-meta">${time} · Sent</div>`;
+      thread.appendChild(bubble);
+      thread.scrollTop = thread.scrollHeight;
+
+      document.getElementById('msg-input').value = '';
+      document.getElementById('msg-input').style.height = 'auto';
+      btn.textContent = '✓ Sent';
+      setTimeout(() => { btn.textContent = 'Send'; btn.disabled = false; }, 1500);
+
+    } else {
+      throw new Error(twilioData.message || 'Send failed');
+    }
+
+  } catch(err) {
+    console.error('Send error:', err);
+    // Show message in thread as pending even if Twilio blocked (CORS in local dev)
+    const thread = document.getElementById('msg-thread');
+    const time = new Date().toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'});
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble outbound';
+    bubble.innerHTML = `<div class="msg-text">${body}</div><div class="msg-meta">${time} · Queued (deploy to server to send live)</div>`;
+    thread.appendChild(bubble);
+    thread.scrollTop = thread.scrollHeight;
+    document.getElementById('msg-input').value = '';
+    btn.textContent = 'Send';
+    btn.disabled = false;
+  }
+}
+// ─── END MESSAGING ───────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded',loadDashboard);
+</script>
+</body>
+</html>

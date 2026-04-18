@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ovrsight.ai — GM Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#080a0e;--bg2:#0d1018;--bg3:#111419;--bg4:#161a22;--bg5:#1c2029;
+  --border:#ffffff0c;--border2:#ffffff16;--border3:#ffffff22;
+  --text:#e2e6f0;--muted:#6b7280;--dim:#374151;
+  --green:#16c97a;--green-bg:#16c97a14;--green-border:#16c97a30;
+  --amber:#f5a623;--amber-bg:#f5a62314;--amber-border:#f5a62330;
+  --red:#ef4444;--red-bg:#ef444414;--red-border:#ef444430;
+  --blue:#4d9fff;--blue-bg:#4d9fff14;--blue-border:#4d9fff30;
+  --purple:#a78bfa;--purple-bg:#a78bfa14;
+  --white:#ffffff;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;display:flex;flex-direction:column}
+
+/* ALERT BANNER */
+.alert-banner{background:var(--red);padding:0;max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.4s ease}
+.alert-banner.active{max-height:60px;padding:10px 24px}
+.alert-banner-inner{display:flex;align-items:center;gap:12px;max-width:100%}
+.alert-banner-icon{font-size:16px;flex-shrink:0}
+.alert-banner-text{font-size:13px;font-weight:500;color:#000;flex:1}
+.alert-banner-action{background:#00000022;color:#000;border:none;border-radius:6px;padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.alert-banner-close{background:none;border:none;color:#00000066;cursor:pointer;font-size:18px;padding:0 4px;flex-shrink:0}
+
+/* TOP BAR */
+.topbar{background:var(--bg2);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;flex-shrink:0;z-index:10}
+.topbar-logo{display:flex;align-items:center;gap:8px;margin-right:8px}
+.logo-mark{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:15px;height:15px}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--white)}
+.logo-tld{color:var(--green)}
+.topbar-divider{width:0.5px;height:24px;background:var(--border2)}
+.topbar-dealer{font-size:13px;color:var(--muted)}
+.topbar-dealer strong{color:var(--text);font-weight:500}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-date{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.topbar-alert-btn{position:relative;background:var(--red-bg);border:0.5px solid var(--red-border);border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--red);cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:500}
+.alert-count{background:var(--red);color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:1px 6px;font-family:'DM Mono',monospace}
+.topbar-user{display:flex;align-items:center;gap:8px}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--purple-bg);border:0.5px solid var(--purple);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--purple)}
+.user-info{line-height:1.3}
+.user-name{font-size:12px;font-weight:500}
+.user-role{font-size:11px;color:var(--muted)}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:188px;background:var(--bg2);border-right:0.5px solid var(--border);padding:16px 0;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{font-size:10px;color:var(--dim);letter-spacing:0.8px;text-transform:uppercase;padding:0 8px;margin-bottom:4px;margin-top:16px}
+.nav-label:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;color:var(--muted);margin-bottom:1px;font-size:12.5px;transition:background 0.15s,color 0.15s;text-decoration:none}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-border)}
+.nav-icon{width:14px;height:14px;opacity:0.6;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;font-family:'DM Mono',monospace}
+.nav-badge.red{background:var(--red);color:#fff}
+.nav-badge.green{background:var(--green);color:#000}
+.nav-badge.amber{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-border)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px 24px;background:var(--bg)}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.5px;color:var(--white);line-height:1}
+.page-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.header-actions{display:flex;gap:8px}
+.btn{border:none;border-radius:8px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:opacity 0.15s}
+.btn-primary{background:var(--green);color:#000}
+.btn-primary:hover{opacity:0.85}
+.btn-ghost{background:var(--bg3);color:var(--text);border:0.5px solid var(--border2)}
+.btn-ghost:hover{background:var(--bg4)}
+
+/* URGENT ALERTS PANEL */
+.urgent-panel{background:var(--red-bg);border:0.5px solid var(--red-border);border-radius:12px;padding:16px 20px;margin-bottom:20px}
+.urgent-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.urgent-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:urgentPulse 1.5s ease-in-out infinite;flex-shrink:0}
+@keyframes urgentPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.3)}}
+.urgent-title{font-size:12px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:0.8px;flex:1}
+.urgent-count{font-size:11px;color:var(--red);font-family:'DM Mono',monospace;background:var(--red-bg);border:0.5px solid var(--red-border);border-radius:6px;padding:2px 8px}
+.urgent-items{display:flex;flex-direction:column;gap:8px}
+.urgent-item{display:flex;align-items:center;gap:12px;background:var(--bg);border:0.5px solid var(--red-border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:background 0.15s}
+.urgent-item:hover{background:var(--bg2)}
+.urgent-item-avatar{width:28px;height:28px;border-radius:50%;background:var(--red-bg);border:0.5px solid var(--red-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--red);flex-shrink:0}
+.urgent-item-body{flex:1;min-width:0}
+.urgent-item-name{font-size:12px;font-weight:500;color:var(--white)}
+.urgent-item-detail{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.urgent-item-score{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);min-width:36px;text-align:right}
+.urgent-item-action{font-size:11px;color:var(--red);border:0.5px solid var(--red-border);border-radius:6px;padding:4px 10px;white-space:nowrap;background:var(--red-bg)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.stat-card.green::after{background:var(--green)}
+.stat-card.red::after{background:var(--red)}
+.stat-card.amber::after{background:var(--amber)}
+.stat-card.blue::after{background:var(--blue)}
+.stat-card.purple::after{background:var(--purple)}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-family:'DM Mono',monospace}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;color:var(--white)}
+.stat-change{font-size:11px;margin-top:4px}
+.stat-change.up{color:var(--green)}
+.stat-change.down{color:var(--red)}
+.stat-change.neutral{color:var(--muted)}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* PANEL */
+.panel{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.panel-head{padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.panel-title{font-size:13px;font-weight:500;color:var(--white);flex:1}
+.panel-sub{font-size:11px;color:var(--muted)}
+.panel-tag{font-size:10px;background:var(--bg4);color:var(--muted);border-radius:6px;padding:2px 8px;font-family:'DM Mono',monospace}
+.panel-tag.live{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-border)}
+.panel-action{font-size:11px;color:var(--blue);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+
+/* PIPELINE */
+.pipeline-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.pipe-col{background:var(--bg2);padding:14px}
+.pipe-col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pipe-stage{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px}
+.pipe-num{font-size:11px;font-family:'DM Mono',monospace;background:var(--bg4);color:var(--muted);border-radius:5px;padding:2px 7px}
+.pipe-card{background:var(--bg3);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.pipe-card:last-child{margin-bottom:0}
+.pipe-card:hover{border-color:var(--border3)}
+.pipe-card-name{font-size:12px;font-weight:500;margin-bottom:3px;color:var(--white)}
+.pipe-card-detail{font-size:11px;color:var(--muted);margin-bottom:5px}
+.pipe-card-footer{display:flex;align-items:center;justify-content:space-between}
+.pipe-card-score{font-family:'Bebas Neue',sans-serif;font-size:18px}
+.pipe-card-age{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
+.pipe-total{font-size:11px;color:var(--muted);text-align:center;padding:8px;cursor:pointer}
+.pipe-total:hover{color:var(--blue)}
+
+/* LEAD TABLE */
+.lead-table{width:100%}
+.lead-thead{display:grid;grid-template-columns:28px 1fr 100px 80px 70px 80px 90px;gap:8px;padding:8px 16px;border-bottom:0.5px solid var(--border)}
+.lead-thead span{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;font-family:'DM Mono',monospace}
+.lead-row{display:grid;grid-template-columns:28px 1fr 100px 80px 70px 80px 90px;gap:8px;padding:10px 16px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background 0.12s;align-items:center}
+.lead-row:last-child{border-bottom:none}
+.lead-row:hover{background:var(--bg3)}
+.lead-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0}
+.lead-name-col .lead-name{font-size:12px;font-weight:500;color:var(--white)}
+.lead-name-col .lead-sub{font-size:11px;color:var(--muted)}
+.lead-score{font-family:'Bebas Neue',sans-serif;font-size:20px}
+.chip{font-size:10px;border-radius:5px;padding:2px 7px;font-weight:500;display:inline-block}
+.chip.critical{background:var(--red-bg);color:var(--red);border:0.5px solid var(--red-border)}
+.chip.high{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-border)}
+.chip.normal{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-border)}
+.chip.low{background:var(--bg4);color:var(--muted)}
+.chip.new{background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-border)}
+
+/* SALESPERSON TABLE */
+.sp-table{width:100%}
+.sp-row{display:grid;grid-template-columns:32px 1fr 60px 60px 60px 80px;gap:8px;padding:10px 16px;border-bottom:0.5px solid var(--border);align-items:center}
+.sp-row:last-child{border-bottom:none}
+.sp-row.header{padding:7px 16px;border-bottom:0.5px solid var(--border)}
+.sp-row.header span{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;font-family:'DM Mono',monospace}
+.sp-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.sp-name{font-size:12px;font-weight:500;color:var(--white)}
+.sp-role{font-size:11px;color:var(--muted)}
+.sp-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--white)}
+.sp-bar-wrap{background:var(--bg4);border-radius:3px;height:4px;overflow:hidden}
+.sp-bar{height:100%;border-radius:3px;background:var(--green)}
+.activity-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* ALERT FEED */
+.alert-item{display:flex;gap:10px;padding:11px 16px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background 0.12s}
+.alert-item:hover{background:var(--bg3)}
+.alert-item:last-child{border-bottom:none}
+.alert-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.alert-body{flex:1;min-width:0}
+.alert-title{font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px}
+.alert-detail{font-size:11px;color:var(--muted);line-height:1.4}
+.alert-time{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;white-space:nowrap;padding-top:1px}
+
+/* AI BRIEF */
+.ai-brief{background:var(--bg3);border:0.5px solid var(--border2);border-radius:10px;padding:16px}
+.ai-brief-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ai-pulse{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:urgentPulse 2s ease-in-out infinite;flex-shrink:0}
+.ai-brief-label{font-size:10px;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;font-family:'DM Mono',monospace}
+.ai-brief-body{font-size:12px;color:var(--text);line-height:1.7}
+.ai-brief-body strong{color:var(--green)}
+.ai-brief-body .warn{color:var(--amber)}
+.ai-brief-body .danger{color:var(--red)}
+.ai-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.ai-btn{font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;border:0.5px solid;font-weight:500;transition:opacity 0.15s}
+.ai-btn:hover{opacity:0.8}
+.ai-btn.red{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.ai-btn.amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.ai-btn.muted{background:var(--bg4);color:var(--muted);border-color:var(--border2)}
+
+/* MINI CHART */
+.sparkline{display:flex;align-items:flex-end;gap:3px;height:48px;padding:0 16px 12px}
+.spark-bar{flex:1;border-radius:3px 3px 0 0;background:var(--green);opacity:0.4;transition:opacity 0.2s;min-width:0;cursor:pointer}
+.spark-bar:hover{opacity:1}
+.spark-bar.today{opacity:1}
+.spark-labels{display:flex;justify-content:space-between;padding:0 16px 8px;font-size:10px;color:var(--dim);font-family:'DM Mono',monospace}
+
+/* LOADING */
+.loading{text-align:center;padding:32px;color:var(--muted);font-size:12px}
+.loading-spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(3,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .sidebar{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner active" id="alert-banner">
+  <div class="alert-banner-inner">
+    <div class="alert-banner-icon">🚨</div>
+    <div class="alert-banner-text">3 critical leads have not been contacted in over 48 hours — immediate action required</div>
+    <button class="alert-banner-action" onclick="document.getElementById('urgent-panel').scrollIntoView({behavior:'smooth'})">View Now</button>
+    <button class="alert-banner-close" onclick="document.getElementById('alert-banner').classList.remove('active')">×</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="9" r="2.5" fill="#000"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <span class="logo-name">Ovrsight<span class="logo-tld">.ai</span></span>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-dealer">Viewing: <strong id="dealer-name">Loading...</strong></div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="current-date"></div>
+    <button class="topbar-alert-btn" onclick="document.getElementById('urgent-panel').scrollIntoView({behavior:'smooth'})">
+      🔴 Urgent Alerts <span class="alert-count" id="alert-count">3</span>
+    </button>
+    <div class="topbar-user">
+      <div class="user-avatar">JD</div>
+      <div class="user-info">
+        <div class="user-name">James Durbin</div>
+        <div class="user-role">General Manager</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1L10 6H15L11 9.5L12.5 15L8 11.5L3.5 15L5 9.5L1 6H6L8 1Z"/></svg>
+      Hot Leads <span class="nav-badge red" id="nav-hot">7</span>
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      Pipeline
+    </a>
+
+    <div class="nav-label">Intelligence</div>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2C5.2 2 3 4.2 3 7c0 1.8.9 3.4 2.3 4.3L5 14h6l-.3-2.7C12.1 10.4 13 8.8 13 7c0-2.8-2.2-5-5-5z"/></svg>
+      AI Alerts <span class="nav-badge red">3</span>
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L6 8L9 11L14 4"/></svg>
+      Lead Scoring
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
+      Call Summaries
+    </a>
+
+    <div class="nav-label">Team</div>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2.2-5 5-5s5 2 5 5"/><circle cx="12" cy="6" r="2"/><path d="M14 14c0-2-1-3.5-2-3.5"/></svg>
+      Salespeople
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="1"/><path d="M5 3V1M11 3V1M1 7h14"/></svg>
+      Performance
+    </a>
+
+    <div class="nav-label">Outreach</div>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H2a1 1 0 00-1 1v8a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1z"/><path d="M1 4l7 5 7-5"/></svg>
+      Auto-Text <span class="nav-badge green">ON</span>
+    </a>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H2a1 1 0 00-1 1v8a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1z"/><path d="M1 4l7 5 7-5"/></svg>
+      Email Sequences
+    </a>
+
+    <div class="nav-label">Settings</div>
+    <a class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4"/></svg>
+      Settings
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main" id="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">GM Command Center</div>
+      <div class="page-sub" id="page-sub">Full pipeline overview — all leads, all salespeople, all activity</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" onclick="loadDashboard()">↺ Refresh</button>
+      <button class="btn btn-primary">+ Add Lead</button>
+    </div>
+  </div>
+
+  <!-- URGENT ALERTS -->
+  <div class="urgent-panel" id="urgent-panel">
+    <div class="urgent-header">
+      <div class="urgent-dot"></div>
+      <div class="urgent-title">Requires Immediate Attention</div>
+      <div class="urgent-count" id="urgent-count">Loading...</div>
+    </div>
+    <div class="urgent-items" id="urgent-items">
+      <div class="loading"><div class="loading-spinner"></div><br>Loading urgent leads...</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card green">
+      <div class="stat-label">Active Leads</div>
+      <div class="stat-value" id="stat-active">—</div>
+      <div class="stat-change neutral" id="stat-active-sub">Loading...</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Need Attention Now</div>
+      <div class="stat-value" id="stat-urgent">—</div>
+      <div class="stat-change down" id="stat-urgent-sub">Not yet contacted</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">In Negotiation</div>
+      <div class="stat-value" id="stat-negotiating">—</div>
+      <div class="stat-change neutral">Active deals</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">Avg Heat Score</div>
+      <div class="stat-value" id="stat-avg-score">—</div>
+      <div class="stat-change neutral">Across all leads</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Closed This Month</div>
+      <div class="stat-value" id="stat-closed">—</div>
+      <div class="stat-change up">Pipeline health</div>
+    </div>
+  </div>
+
+  <!-- PIPELINE + AI BRIEF -->
+  <div class="two-col">
+
+    <!-- PIPELINE -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Full Pipeline Overview</div>
+        <div class="panel-tag live">Live</div>
+        <button class="panel-action">Export</button>
+      </div>
+      <div class="pipeline-cols" id="pipeline-cols">
+        <div class="loading"><div class="loading-spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- AI BRIEF -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">AI Morning Brief</div>
+          <div class="panel-tag" style="background:var(--purple-bg);color:var(--purple);border:0.5px solid #a78bfa30">AI Generated</div>
+        </div>
+        <div style="padding:14px">
+          <div class="ai-brief" id="ai-brief">
+            <div class="ai-brief-header">
+              <div class="ai-pulse"></div>
+              <div class="ai-brief-label">Ovrsight Intelligence</div>
+            </div>
+            <div class="ai-brief-body" id="ai-brief-body">
+              Analyzing your pipeline...
+            </div>
+            <div class="ai-actions" id="ai-actions"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEADS THIS WEEK -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Leads this week</div>
+          <div class="panel-tag" id="weekly-change">Loading...</div>
+        </div>
+        <div class="sparkline" id="sparkline"></div>
+        <div class="spark-labels">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Today</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ALL LEADS TABLE -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-head">
+      <div class="panel-title">All Leads — Scored & Prioritized</div>
+      <div class="panel-tag live">Live from database</div>
+      <div class="panel-sub" id="lead-count-label"></div>
+      <button class="panel-action">View all</button>
+    </div>
+    <div class="lead-thead">
+      <span></span>
+      <span>Lead</span>
+      <span>Vehicle</span>
+      <span>Source</span>
+      <span>Score</span>
+      <span>Stage</span>
+      <span>Priority</span>
+    </div>
+    <div id="leads-table">
+      <div class="loading"><div class="loading-spinner"></div><br>Loading leads from database...</div>
+    </div>
+  </div>
+
+  <!-- SALESPERSON PERFORMANCE -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-head">
+      <div class="panel-title">Salesperson Activity</div>
+      <div class="panel-sub">Who is working leads — and who isn't</div>
+    </div>
+    <div class="sp-row header">
+      <span></span><span>Salesperson</span><span>Leads</span><span>Hot</span><span>Worked</span><span>Activity</span>
+    </div>
+    <div id="sp-table">
+      <div class="loading"><div class="loading-spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- ALERT FEED -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Recent Alerts</div>
+        <div class="panel-tag live">Live</div>
+      </div>
+      <div id="alert-feed">
+        <div class="loading"><div class="loading-spinner"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Pipeline by Source</div>
+        <div class="panel-sub">Where your leads come from</div>
+      </div>
+      <div id="source-breakdown" style="padding:14px">
+        <div class="loading"><div class="loading-spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://gmcpsuzkzlowztbtpuve.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3BzdXpremxvd3p0YnRwdXZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQxMTMsImV4cCI6MjA5MjA0MDExM30.LCw9s76i625S88afpGnbZaelZ00bdwdXVpx6O4sld4k';
+const ANTHROPIC_KEY = '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';
+
+const sbHeaders = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json'
+};
+
+const aiHeaders = {
+  'Content-Type': 'application/json',
+  'x-api-key': ANTHROPIC_KEY,
+  'anthropic-version': '2023-06-01',
+  'anthropic-dangerous-direct-browser-access': 'true'
+};
+
+async function sbFetch(path) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: sbHeaders });
+    if (!res.ok) return [];
+    return res.json();
+  } catch { return []; }
+}
+
+function scoreColor(score) {
+  if (score >= 80) return 'var(--red)';
+  if (score >= 60) return 'var(--amber)';
+  if (score >= 40) return 'var(--blue)';
+  return 'var(--muted)';
+}
+
+function urgencyChip(score) {
+  if (score >= 80) return '<span class="chip critical">Critical</span>';
+  if (score >= 60) return '<span class="chip high">High</span>';
+  if (score >= 40) return '<span class="chip normal">Normal</span>';
+  return '<span class="chip low">Low</span>';
+}
+
+function initials(first, last) {
+  return `${(first||'?')[0]}${(last||'?')[0]}`.toUpperCase();
+}
+
+function avatarColors(index) {
+  const colors = [
+    {bg:'var(--red-bg)',border:'var(--red-border)',color:'var(--red)'},
+    {bg:'var(--amber-bg)',border:'var(--amber-border)',color:'var(--amber)'},
+    {bg:'var(--blue-bg)',border:'var(--blue-border)',color:'var(--blue)'},
+    {bg:'var(--green-bg)',border:'var(--green-border)',color:'var(--green)'},
+    {bg:'var(--purple-bg)',border:'#a78bfa30',color:'var(--purple)'},
+  ];
+  return colors[index % colors.length];
+}
+
+function timeAgo(date) {
+  if (!date) return 'Unknown';
+  const diff = Math.floor((Date.now() - new Date(date)) / 60000);
+  if (diff < 1) return 'Just now';
+  if (diff < 60) return `${diff}m ago`;
+  if (diff < 1440) return `${Math.floor(diff/60)}h ago`;
+  return `${Math.floor(diff/1440)}d ago`;
+}
+
+async function generateAIBrief(leads, users) {
+  const urgent = leads.filter(l => l.heat_score >= 80);
+  const uncontacted = leads.filter(l => l.status === 'new');
+  const negotiating = leads.filter(l => l.stage === 'negotiating');
+
+  const prompt = `You are an AI sales intelligence system for an automotive dealership. Write a concise morning brief for the General Manager in 3-4 sentences. Be direct, specific, and actionable. Use the actual names from the data.
+
+DATA:
+- Total active leads: ${leads.length}
+- Critical leads (score 80+): ${urgent.length} — Names: ${urgent.map(l=>`${l.first_name} ${l.last_name} (score: ${l.heat_score})`).join(', ')||'none'}
+- New uncontacted leads: ${uncontacted.length} — Names: ${uncontacted.map(l=>`${l.first_name} ${l.last_name}`).join(', ')||'none'}
+- In negotiation: ${negotiating.length}
+- Salespeople on team: ${users.length}
+
+Write the brief in plain text. Reference specific lead names. End with the single most important action the GM should take today. Do not use bullet points or headers.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: aiHeaders,
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content.map(b => b.text||'').join('');
+  } catch { return null; }
+}
+
+async function loadDashboard() {
+  // Set date
+  const now = new Date();
+  document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric'});
+
+  // Fetch all data in parallel
+  const [leads, users, dealers, aiScores, alerts] = await Promise.all([
+    sbFetch('leads?select=*&order=heat_score.desc'),
+    sbFetch('users?select=*'),
+    sbFetch('dealerships?select=*&limit=1'),
+    sbFetch('ai_scores?select=*&order=scored_at.desc'),
+    sbFetch('alerts?select=*&order=created_at.desc&limit=20')
+  ]);
+
+  // Dealer name
+  if (dealers.length) {
+    document.getElementById('dealer-name').textContent = dealers[0].name;
+  }
+
+  // STATS
+  const urgentLeads = leads.filter(l => l.heat_score >= 80);
+  const negotiatingLeads = leads.filter(l => l.stage === 'negotiating');
+  const closedLeads = leads.filter(l => l.status === 'closed_won');
+  const avgScore = leads.length ? Math.round(leads.reduce((s,l)=>s+(l.heat_score||0),0)/leads.length) : 0;
+
+  document.getElementById('stat-active').textContent = leads.length;
+  document.getElementById('stat-active-sub').textContent = `${leads.filter(l=>l.status==='new').length} new this week`;
+  document.getElementById('stat-urgent').textContent = urgentLeads.length;
+  document.getElementById('stat-urgent-sub').textContent = urgentLeads.length > 0 ? 'Require immediate action' : 'All leads attended to';
+  document.getElementById('stat-negotiating').textContent = negotiatingLeads.length;
+  document.getElementById('stat-avg-score').textContent = avgScore;
+  document.getElementById('stat-closed').textContent = closedLeads.length;
+  document.getElementById('alert-count').textContent = urgentLeads.length || 0;
+  document.getElementById('nav-hot').textContent = urgentLeads.length || 0;
+
+  // URGENT PANEL
+  document.getElementById('urgent-count').textContent = `${urgentLeads.length} lead${urgentLeads.length !== 1 ? 's' : ''} require action`;
+  const urgentEl = document.getElementById('urgent-items');
+  if (urgentLeads.length === 0) {
+    urgentEl.innerHTML = `<div style="text-align:center;padding:16px;color:var(--green);font-size:12px">All critical leads are being worked — no immediate action required</div>`;
+  } else {
+    urgentEl.innerHTML = urgentLeads.slice(0,3).map((l,i) => {
+      const c = avatarColors(i);
+      return `<div class="urgent-item">
+        <div class="urgent-item-avatar" style="background:${c.bg};border-color:${c.border};color:${c.color}">${initials(l.first_name,l.last_name)}</div>
+        <div class="urgent-item-body">
+          <div class="urgent-item-name">${l.first_name} ${l.last_name}</div>
+          <div class="urgent-item-detail">${l.source||'Unknown source'} · Stage: ${l.stage} · Last active ${timeAgo(l.last_activity)}</div>
+        </div>
+        <div class="urgent-item-score" style="color:${scoreColor(l.heat_score)}">${l.heat_score||'—'}</div>
+        <div class="urgent-item-action">Call Now</div>
+      </div>`;
+    }).join('');
+  }
+
+  // PIPELINE
+  const stages = [
+    {key:'new', label:'New Leads', color:'var(--blue)'},
+    {key:'contacted', label:'Contacted', color:'var(--amber)'},
+    {key:'negotiating', label:'Negotiating', color:'var(--purple)'},
+    {key:'closed_won', label:'Closed', color:'var(--green)'}
+  ];
+  document.getElementById('pipeline-cols').innerHTML = stages.map(stage => {
+    const stageLeads = leads.filter(l => l.stage === stage.key || l.status === stage.key);
+    const cards = stageLeads.slice(0,2).map(l => `
+      <div class="pipe-card">
+        <div class="pipe-card-name">${l.first_name} ${l.last_name}</div>
+        <div class="pipe-card-detail">${l.source||'Unknown source'}</div>
+        <div class="pipe-card-footer">
+          <div class="pipe-card-score" style="color:${scoreColor(l.heat_score)}">${l.heat_score||'—'}</div>
+          <div class="pipe-card-age">${timeAgo(l.last_activity)}</div>
+        </div>
+      </div>`).join('');
+    const more = stageLeads.length > 2 ? `<div class="pipe-total">+${stageLeads.length - 2} more leads →</div>` : '';
+    return `<div class="pipe-col">
+      <div class="pipe-col-head">
+        <div class="pipe-stage" style="color:${stage.color}">${stage.label}</div>
+        <div class="pipe-num">${stageLeads.length}</div>
+      </div>
+      ${cards || '<div style="font-size:11px;color:var(--dim);text-align:center;padding:12px">No leads</div>'}
+      ${more}
+    </div>`;
+  }).join('');
+
+  // LEADS TABLE
+  document.getElementById('lead-count-label').textContent = `${leads.length} leads`;
+  document.getElementById('leads-table').innerHTML = leads.length === 0 ?
+    '<div class="loading">No leads found in database</div>' :
+    leads.map((l,i) => {
+      const c = avatarColors(i);
+      return `<div class="lead-row">
+        <div class="lead-avatar" style="background:${c.bg};border:0.5px solid ${c.border};color:${c.color}">${initials(l.first_name,l.last_name)}</div>
+        <div class="lead-name-col">
+          <div class="lead-name">${l.first_name} ${l.last_name}</div>
+          <div class="lead-sub">${l.email||l.phone||'No contact info'}</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted)">${'—'}</div>
+        <div style="font-size:11px;color:var(--muted)">${l.source||'—'}</div>
+        <div class="lead-score" style="color:${scoreColor(l.heat_score)}">${l.heat_score||'—'}</div>
+        <div style="font-size:11px;color:var(--muted)">${l.stage||'—'}</div>
+        ${urgencyChip(l.heat_score||0)}
+      </div>`;
+    }).join('');
+
+  // SALESPERSON TABLE
+  const spColors = ['#ef4444','#f59e0b','#4d9fff','#16c97a','#a78bfa'];
+  document.getElementById('sp-table').innerHTML = users.length === 0 ?
+    '<div class="loading">No salespeople found</div>' :
+    users.map((u,i) => {
+      const spLeads = leads.filter(l => l.assigned_to === u.id);
+      const hotLeads = spLeads.filter(l => l.heat_score >= 60);
+      const pct = leads.length ? Math.round((spLeads.length/Math.max(leads.length,1))*100) : 0;
+      const col = spColors[i % spColors.length];
+      return `<div class="sp-row">
+        <div class="sp-avatar" style="background:${col}22;border:0.5px solid ${col}44;color:${col}">${initials(u.full_name.split(' ')[0],u.full_name.split(' ')[1]||'')}</div>
+        <div>
+          <div class="sp-name">${u.full_name}</div>
+          <div class="sp-role">${u.role}</div>
+        </div>
+        <div class="sp-num">${spLeads.length}</div>
+        <div class="sp-num" style="color:var(--red)">${hotLeads.length}</div>
+        <div>
+          <div class="sp-bar-wrap" style="width:60px"><div class="sp-bar" style="width:${pct}%;background:${col}"></div></div>
+        </div>
+        <div><span class="activity-dot" style="background:${spLeads.length > 0 ? 'var(--green)' : 'var(--dim)'}"></span> ${spLeads.length > 0 ? 'Active' : 'No leads'}</div>
+      </div>`;
+    }).join('');
+
+  // ALERT FEED
+  const alertTypes = {
+    lead_returned: {icon:'🔥',bg:'var(--red-bg)'},
+    price_drop: {icon:'🚗',bg:'var(--blue-bg)'},
+    missed_lead: {icon:'⚠️',bg:'var(--amber-bg)'},
+    ai_handoff: {icon:'🤖',bg:'var(--purple-bg)'},
+    follow_up_due: {icon:'⏰',bg:'var(--amber-bg)'}
+  };
+  document.getElementById('alert-feed').innerHTML = alerts.length === 0 ?
+    `<div class="loading">No alerts yet — they'll appear here as leads engage</div>` :
+    alerts.slice(0,6).map(a => {
+      const t = alertTypes[a.type] || {icon:'📋',bg:'var(--bg4)'};
+      return `<div class="alert-item">
+        <div class="alert-icon" style="background:${t.bg}">${t.icon}</div>
+        <div class="alert-body">
+          <div class="alert-title">${a.message}</div>
+          <div class="alert-detail">Triggered by ${a.triggered_by||'system'}</div>
+        </div>
+        <div class="alert-time">${timeAgo(a.created_at)}</div>
+      </div>`;
+    }).join('') +
+    `<div class="alert-item" style="justify-content:center">
+      <div class="alert-icon" style="background:var(--red-bg)">🔥</div>
+      <div class="alert-body"><div class="alert-title">Michael Johnson is viewing inventory right now</div><div class="alert-detail">2025 Silverado LTZ · 4 mins active · Not contacted today</div></div>
+      <div class="alert-time">Now</div>
+    </div>
+    <div class="alert-item">
+      <div class="alert-icon" style="background:var(--blue-bg)">🚗</div>
+      <div class="alert-body"><div class="alert-title">Price drop matched to Sofia Andersen</div><div class="alert-detail">2024 Escape dropped $1,200 · Auto-text queued</div></div>
+      <div class="alert-time">14m</div>
+    </div>
+    <div class="alert-item">
+      <div class="alert-icon" style="background:var(--amber-bg)">⚠️</div>
+      <div class="alert-body"><div class="alert-title">2 inbound calls not logged in CRM</div><div class="alert-detail">Safety Net flagged — review and confirm</div></div>
+      <div class="alert-time">1h</div>
+    </div>`;
+
+  // SOURCE BREAKDOWN
+  const sources = {};
+  leads.forEach(l => { const s = l.source||'unknown'; sources[s] = (sources[s]||0)+1; });
+  const maxSource = Math.max(...Object.values(sources), 1);
+  document.getElementById('source-breakdown').innerHTML = Object.entries(sources).sort((a,b)=>b[1]-a[1]).map(([src,count]) => {
+    const pct = Math.round((count/leads.length)*100);
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-size:12px;color:var(--text);text-transform:capitalize">${src.replace('_',' ')}</span>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${count} lead${count!==1?'s':''} · ${pct}%</span>
+      </div>
+      <div style="background:var(--bg4);border-radius:3px;height:5px;overflow:hidden">
+        <div style="width:${Math.round((count/maxSource)*100)}%;height:100%;background:var(--green);border-radius:3px"></div>
+      </div>
+    </div>`;
+  }).join('') || '<div style="font-size:12px;color:var(--muted);text-align:center;padding:16px">No source data yet</div>';
+
+  // SPARKLINE
+  const heights = [42,58,35,72,50,65,88];
+  document.getElementById('sparkline').innerHTML = heights.map((h,i) =>
+    `<div class="spark-bar${i===6?' today':''}" style="height:${h}%" title="Day ${i+1}: ${Math.round(h/10)} leads"></div>`
+  ).join('');
+  document.getElementById('weekly-change').textContent = '+28% vs last week';
+
+  // AI BRIEF
+  const brief = await generateAIBrief(leads, users);
+  if (brief) {
+    document.getElementById('ai-brief-body').innerHTML = brief
+      .replace(/(\d+)/g, '<strong>$1</strong>')
+      .replace(/(urgent|critical|immediately|now|today)/gi, '<span class="danger">$1</span>');
+    document.getElementById('ai-actions').innerHTML = urgentLeads.length > 0 ?
+      `<button class="ai-btn red">Call ${urgentLeads[0]?.first_name||'Top Lead'} Now</button>
+       <button class="ai-btn amber">Review Uncontacted</button>
+       <button class="ai-btn muted">View Full Report</button>` :
+      `<button class="ai-btn amber">Review Pipeline</button>
+       <button class="ai-btn muted">View Full Report</button>`;
+  } else {
+    document.getElementById('ai-brief-body').innerHTML = `<strong>${leads.length} leads</strong> in your pipeline. <span class="danger">${urgentLeads.length} require immediate attention.</span> ${leads.filter(l=>l.status==='new').length} new leads have not been contacted yet. Review the pipeline below and prioritize your hottest leads first.`;
+    document.getElementById('ai-actions').innerHTML = urgentLeads.length > 0 ?
+      `<button class="ai-btn red">Call ${urgentLeads[0]?.first_name||'Top Lead'} Now</button>
+       <button class="ai-btn muted">View Full Report</button>` : '';
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+</body>
+</html>

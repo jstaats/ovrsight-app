@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ovrsight.ai — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#0c0e12;
+  --surface:#111318;
+  --surface2:#171b22;
+  --line:#ffffff08;
+  --line2:#ffffff14;
+  --text:#d8dce8;
+  --text2:#8b909e;
+  --text3:#4a4f5e;
+  --green:#19c97a;
+  --green-dim:#19c97a18;
+  --green-line:#19c97a30;
+  --red:#e85555;
+  --red-dim:#e8555518;
+  --white:#ffffff;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;display:flex;align-items:center;justify-content:center;position:relative}
+
+/* BACKGROUND GRID */
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.bg-glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-60%);width:600px;height:600px;background:radial-gradient(ellipse,#19c97a0a 0%,transparent 70%);pointer-events:none}
+
+/* CARD */
+.card{position:relative;z-index:1;width:100%;max-width:400px;padding:0 20px}
+
+/* LOGO */
+.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:40px}
+.logo-mark{width:36px;height:36px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:19px;height:19px}
+.logo-name{font-size:22px;font-weight:500;color:var(--white);letter-spacing:-0.5px}
+.logo-name span{color:var(--green)}
+
+/* FORM CARD */
+.form-card{background:var(--surface);border:0.5px solid var(--line2);border-radius:14px;padding:32px}
+.form-title{font-size:18px;font-weight:500;color:var(--white);margin-bottom:6px;text-align:center}
+.form-sub{font-size:12px;color:var(--text2);text-align:center;margin-bottom:28px}
+
+/* INPUTS */
+.field{margin-bottom:16px}
+.field-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:7px;display:block;font-family:'DM Mono',monospace}
+.field-input{width:100%;background:var(--surface2);border:0.5px solid var(--line2);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.15s}
+.field-input:focus{border-color:var(--green-line)}
+.field-input::placeholder{color:var(--text3)}
+.field-input.error{border-color:var(--red)}
+
+/* PASSWORD WRAPPER */
+.pw-wrap{position:relative}
+.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:4px;transition:color 0.15s}
+.pw-toggle:hover{color:var(--text2)}
+
+/* ERROR MESSAGE */
+.error-msg{background:var(--red-dim);border:0.5px solid var(--red);border-radius:7px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:16px;display:none;line-height:1.5}
+.error-msg.show{display:block}
+
+/* SUBMIT */
+.submit-btn{width:100%;background:var(--green);color:#000;border:none;border-radius:9px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity 0.15s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:hover{opacity:0.88}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid #00000033;border-top-color:#000;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+.submit-btn.loading .spinner{display:block}
+.submit-btn.loading .btn-label{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+.divider-line{flex:1;height:0.5px;background:var(--line2)}
+.divider-text{font-size:11px;color:var(--text3)}
+
+/* ROLE PILLS */
+.role-pills{display:flex;flex-direction:column;gap:8px}
+.role-pill{display:flex;align-items:center;gap:12px;background:var(--surface2);border:0.5px solid var(--line2);border-radius:8px;padding:10px 14px;cursor:pointer;transition:border-color 0.15s,background 0.15s}
+.role-pill:hover{border-color:var(--green-line);background:var(--green-dim)}
+.role-pill-icon{font-size:16px;flex-shrink:0}
+.role-pill-body{flex:1}
+.role-pill-name{font-size:12px;font-weight:500;color:var(--white)}
+.role-pill-desc{font-size:11px;color:var(--text2);margin-top:1px}
+.role-pill-arrow{color:var(--text3);font-size:14px}
+
+/* FOOTER */
+.form-footer{text-align:center;margin-top:20px;font-size:11px;color:var(--text3)}
+.form-footer a{color:var(--text2);text-decoration:none}
+.form-footer a:hover{color:var(--text)}
+
+/* SUCCESS STATE */
+.success-state{display:none;text-align:center;padding:16px 0}
+.success-icon{font-size:40px;margin-bottom:16px}
+.success-title{font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px}
+.success-sub{font-size:12px;color:var(--text2);margin-bottom:20px;line-height:1.6}
+.success-role{display:inline-block;font-size:11px;background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-line);border-radius:5px;padding:3px 10px;font-family:'DM Mono',monospace;margin-bottom:20px}
+.redirect-bar{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:16px}
+.redirect-fill{height:100%;background:var(--green);border-radius:2px;width:0%;transition:width 2s linear}
+.redirect-label{font-size:11px;color:var(--text3);margin-top:8px}
+
+/* DEMO ACCOUNTS */
+.demo-section{margin-top:24px}
+.demo-title{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;text-align:center;margin-bottom:10px;font-family:'DM Mono',monospace}
+.demo-accounts{display:flex;flex-direction:column;gap:6px}
+.demo-account{display:flex;align-items:center;gap:10px;background:var(--surface2);border:0.5px solid var(--line);border-radius:7px;padding:8px 12px;cursor:pointer;transition:border-color 0.15s}
+.demo-account:hover{border-color:var(--line2)}
+.demo-role{font-size:10px;font-weight:500;font-family:'DM Mono',monospace;min-width:80px}
+.demo-role.admin{color:var(--green)}
+.demo-role.manager{color:#5b9cf6}
+.demo-role.salesperson{color:#a78bfa}
+.demo-email{font-size:11px;color:var(--text2);flex:1}
+.demo-fill{font-size:10px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="card">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="9" r="2.5" fill="#000"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <span class="logo-name">Ovrsight<span>.ai</span></span>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+
+    <!-- LOGIN FORM -->
+    <div id="login-form">
+      <div class="form-title">Welcome back</div>
+      <div class="form-sub">Sign in to your Ovrsight dashboard</div>
+
+      <div class="error-msg" id="error-msg">Invalid email or password. Please try again.</div>
+
+      <div class="field">
+        <label class="field-label">Email</label>
+        <input class="field-input" type="email" id="email" placeholder="you@dealership.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Password</label>
+        <div class="pw-wrap">
+          <input class="field-input" type="password" id="password" placeholder="••••••••••" autocomplete="current-password" />
+          <button class="pw-toggle" onclick="togglePassword()" type="button" id="pw-toggle">Show</button>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="signIn()">
+        <div class="spinner"></div>
+        <span class="btn-label">Sign In</span>
+      </button>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">or sign in as</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="role-pills">
+        <div class="role-pill" onclick="fillDemo('jonah.staats@gmail.com','Getrich2026!')">
+          <div class="role-pill-icon">🔑</div>
+          <div class="role-pill-body">
+            <div class="role-pill-name">Admin</div>
+            <div class="role-pill-desc">Full access across all dealerships</div>
+          </div>
+          <div class="role-pill-arrow">→</div>
+        </div>
+        <div class="role-pill" onclick="fillDemo('intexthi@gmail.com','Getrich2026!')">
+          <div class="role-pill-icon">📊</div>
+          <div class="role-pill-body">
+            <div class="role-pill-name">General Manager</div>
+            <div class="role-pill-desc">Store overview, pipeline, team performance</div>
+          </div>
+          <div class="role-pill-arrow">→</div>
+        </div>
+        <div class="role-pill" onclick="fillDemo('jonahstaats@outlook.com','Getrich2026!')">
+          <div class="role-pill-icon">🎯</div>
+          <div class="role-pill-body">
+            <div class="role-pill-name">Salesperson</div>
+            <div class="role-pill-desc">My leads, follow-ups, and outreach</div>
+          </div>
+          <div class="role-pill-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-state" id="success-state">
+      <div class="success-icon" id="success-icon">✅</div>
+      <div class="success-title" id="success-title">Signed in successfully</div>
+      <div class="success-role" id="success-role">—</div>
+      <div class="success-sub" id="success-sub">Taking you to your dashboard...</div>
+      <div class="redirect-bar"><div class="redirect-fill" id="redirect-fill"></div></div>
+      <div class="redirect-label">Redirecting...</div>
+    </div>
+
+  </div>
+
+  <div class="form-footer">
+    Having trouble? <a href="mailto:jonah.staats@gmail.com">Contact support</a>
+  </div>
+
+</div>
+
+<script>
+const SB = 'https://gmcpsuzkzlowztbtpuve.supabase.co';
+const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3BzdXpremxvd3p0YnRwdXZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQxMTMsImV4cCI6MjA5MjA0MDExM30.LCw9s76i625S88afpGnbZaelZ00bdwdXVpx6O4sld4k';
+
+function togglePassword(){
+  const input=document.getElementById('password');
+  const btn=document.getElementById('pw-toggle');
+  if(input.type==='password'){input.type='text';btn.textContent='Hide';}
+  else{input.type='password';btn.textContent='Show';}
+}
+
+function fillDemo(email, password){
+  document.getElementById('email').value=email;
+  document.getElementById('password').value=password;
+  document.getElementById('error-msg').classList.remove('show');
+  document.getElementById('email').classList.remove('error');
+  document.getElementById('password').classList.remove('error');
+}
+
+function showError(msg){
+  const el=document.getElementById('error-msg');
+  el.textContent=msg;
+  el.classList.add('show');
+  document.getElementById('email').classList.add('error');
+  document.getElementById('password').classList.add('error');
+}
+
+function showSuccess(role, name){
+  document.getElementById('login-form').style.display='none';
+  const s=document.getElementById('success-state');
+  s.style.display='block';
+
+  const icons={admin:'🔑',manager:'📊',salesperson:'🎯'};
+  const labels={admin:'Admin',manager:'General Manager',salesperson:'Salesperson'};
+  document.getElementById('success-icon').textContent=icons[role]||'✅';
+  document.getElementById('success-title').textContent=`Welcome back, ${name.split(' ')[0]}`;
+  document.getElementById('success-role').textContent=labels[role]||role;
+  document.getElementById('success-sub').textContent=`Routing you to your ${labels[role]||role} dashboard...`;
+
+  // Start redirect bar animation
+  setTimeout(()=>{document.getElementById('redirect-fill').style.width='100%';},100);
+}
+
+async function signIn(){
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+
+  if(!email||!password){showError('Please enter your email and password.');return;}
+
+  const btn=document.getElementById('submit-btn');
+  btn.classList.add('loading');
+  btn.disabled=true;
+  document.getElementById('error-msg').classList.remove('show');
+  document.getElementById('email').classList.remove('error');
+  document.getElementById('password').classList.remove('error');
+
+  try{
+    // Sign in with Supabase Auth
+    const authRes=await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+      method:'POST',
+      headers:{'apikey':SK,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+
+    const authData=await authRes.json();
+
+    if(!authRes.ok||authData.error){
+      showError(authData.error_description||authData.msg||'Invalid email or password.');
+      btn.classList.remove('loading');
+      btn.disabled=false;
+      return;
+    }
+
+    // Store session token
+    const token=authData.access_token;
+    const userId=authData.user?.id;
+    localStorage.setItem('ovrsight_token',token);
+    localStorage.setItem('ovrsight_user_id',userId);
+
+    // Fetch user role from database
+    const userRes=await fetch(`${SB}/rest/v1/users?auth_id=eq.${userId}&select=*`,{
+      headers:{'apikey':SK,'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}
+    });
+
+    const users=await userRes.json();
+    const user=users[0];
+
+    if(!user){
+      showError('Account found but not linked to a dealership. Contact your administrator.');
+      btn.classList.remove('loading');
+      btn.disabled=false;
+      return;
+    }
+
+    // Store user info
+    localStorage.setItem('ovrsight_role',user.role);
+    localStorage.setItem('ovrsight_name',user.full_name);
+    localStorage.setItem('ovrsight_dealership_id',user.dealership_id);
+
+    // Show success state
+    btn.classList.remove('loading');
+    showSuccess(user.role, user.full_name);
+
+    // Redirect to correct dashboard after 2.2 seconds
+    setTimeout(()=>{
+      if(user.role==='admin'||user.role==='manager'){
+        window.location.href='gm_dashboard.html';
+      } else {
+        window.location.href='salesperson_dashboard.html';
+      }
+    },2200);
+
+  } catch(err){
+    showError('Connection error. Please check your internet and try again.');
+    btn.classList.remove('loading');
+    btn.disabled=false;
+  }
+}
+
+// Allow Enter key to submit
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter')signIn();
+});
+
+// Check if already logged in
+const existingToken=localStorage.getItem('ovrsight_token');
+const existingRole=localStorage.getItem('ovrsight_role');
+if(existingToken&&existingRole){
+  // Already logged in — show quick redirect option
+  const name=localStorage.getItem('ovrsight_name')||'';
+  if(name){
+    document.querySelector('.form-sub').textContent=`Already signed in as ${name.split(' ')[0]} — or sign in as a different user`;
+  }
+}
+</script>
+</body>
+</html>
