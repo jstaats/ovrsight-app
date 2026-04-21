@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ovrsight — Admin Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#0c0e12;--surface:#111318;--surface2:#171b22;--surface3:#1d2028;
+  --line:#ffffff08;--line2:#ffffff14;--line3:#ffffff22;
+  --text:#d8dce8;--text2:#8b909e;--text3:#4a4f5e;
+  --green:#19c97a;--green-dim:#19c97a18;--green-line:#19c97a30;
+  --red:#e85555;--red-dim:#e8555518;--red-line:#e8555528;
+  --amber:#e8a020;--amber-dim:#e8a02018;
+  --white:#ffffff;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px}
+body{padding:32px}
+
+/* HEADER */
+.header{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:0.5px solid var(--line2)}
+.logo-mark{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px}
+.header-title{font-size:16px;font-weight:500;color:var(--white)}
+.header-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.header-right{margin-left:auto;display:flex;gap:8px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;max-width:1100px}
+
+/* PANELS */
+.panel{background:var(--surface);border:0.5px solid var(--line2);border-radius:12px;overflow:hidden}
+.panel-head{padding:16px 20px;border-bottom:0.5px solid var(--line);display:flex;align-items:center;gap:8px}
+.panel-title{font-size:13px;font-weight:500;color:var(--white);flex:1}
+.panel-tag{font-size:10px;background:var(--surface2);color:var(--text2);border-radius:5px;padding:2px 8px;font-family:'DM Mono',monospace}
+.panel-body{padding:20px}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px;display:block;font-family:'DM Mono',monospace}
+.form-input{width:100%;background:var(--surface2);border:0.5px solid var(--line2);border-radius:7px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--green-line)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input option{background:var(--surface2)}
+.form-section{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin:20px 0 12px;font-family:'DM Mono',monospace;padding-top:16px;border-top:0.5px solid var(--line)}
+.form-section:first-child{margin-top:0;padding-top:0;border-top:none}
+
+/* BUTTONS */
+.btn{border:none;border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:opacity 0.15s}
+.btn:hover{opacity:0.85}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn-primary{background:var(--green);color:#000;width:100%;padding:12px;font-size:13px;border-radius:9px;margin-top:8px}
+.btn-ghost{background:var(--surface2);color:var(--text2);border:0.5px solid var(--line2)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:0.5px solid var(--red-line)}
+
+/* STATUS */
+.status-box{border-radius:8px;padding:12px 14px;font-size:12px;margin-top:12px;display:none;line-height:1.5}
+.status-box.success{background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-line);display:block}
+.status-box.error{background:var(--red-dim);color:var(--red);border:0.5px solid var(--red-line);display:block}
+.status-box.loading{background:var(--surface2);color:var(--text2);border:0.5px solid var(--line2);display:block}
+
+/* DEALER LIST */
+.dealer-list{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.dealer-item{background:var(--surface);padding:14px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.12s}
+.dealer-item:hover{background:var(--surface2)}
+.dealer-avatar{width:34px;height:34px;border-radius:8px;background:var(--green-dim);border:0.5px solid var(--green-line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--green);flex-shrink:0}
+.dealer-info{flex:1;min-width:0}
+.dealer-name{font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px}
+.dealer-meta{font-size:11px;color:var(--text2)}
+.dealer-status{font-size:10px;border-radius:5px;padding:2px 7px;font-family:'DM Mono',monospace}
+.dealer-status.active{background:var(--green-dim);color:var(--green)}
+.dealer-status.trial{background:var(--amber-dim);color:var(--amber)}
+
+/* USERS LIST */
+.user-item{display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:0.5px solid var(--line)}
+.user-item:last-child{border-bottom:none}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--text2);flex-shrink:0}
+.user-name{font-size:12px;font-weight:500;color:var(--white);flex:1}
+.user-role{font-size:10px;color:var(--text2);font-family:'DM Mono',monospace}
+.user-email{font-size:11px;color:var(--text2)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--green-dim);border:0.5px solid var(--green-line);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--green);flex-shrink:0;margin-top:1px}
+.step-body{flex:1}
+.step-title{font-size:12px;font-weight:500;color:var(--white);margin-bottom:2px}
+.step-desc{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* LOADING */
+.spin{display:inline-block;width:12px;height:12px;border:1.5px solid var(--line2);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{padding:32px;text-align:center;color:var(--text2);font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-mark">
+    <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="9" r="2.5" fill="#000"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div>
+    <div class="header-title">Ovrsight Admin — Dealer Onboarding</div>
+    <div class="header-sub">Add new dealers and manage existing accounts</div>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-ghost" onclick="loadDealers()">↺ Refresh</button>
+    <a href="gm_dashboard.html" class="btn btn-ghost" style="text-decoration:none">← Back to Dashboard</a>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- LEFT: ADD NEW DEALER -->
+  <div>
+    <div class="panel" style="margin-bottom:20px">
+      <div class="panel-head">
+        <div class="panel-title">Add New Dealer</div>
+        <div class="panel-tag">Step by step</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Fill in dealership details</div><div class="step-desc">Name, location, CRM they use</div></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Add the GM's information</div><div class="step-desc">Their email gets a login invite automatically</div></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Click Create Dealer</div><div class="step-desc">Everything is set up instantly — GM can log in right away</div></div></div>
+        </div>
+
+        <!-- DEALERSHIP INFO -->
+        <div class="form-section">Dealership Information</div>
+        <div class="form-group">
+          <label class="form-label">Dealership Name</label>
+          <input class="form-input" type="text" id="d-name" placeholder="Metro Ford" />
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">City / State</label>
+            <input class="form-input" type="text" id="d-address" placeholder="Indianapolis, IN" />
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Phone</label>
+            <input class="form-input" type="tel" id="d-phone" placeholder="(317) 555-0100" />
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">CRM System</label>
+            <select class="form-input" id="d-crm">
+              <option value="">Select CRM...</option>
+              <option>VinSolutions</option>
+              <option>DealerSocket</option>
+              <option>Elead</option>
+              <option>DealerTrack</option>
+              <option>Tekion</option>
+              <option>Reynolds & Reynolds</option>
+              <option>Other</option>
+              <option>No CRM</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Monthly Lead Volume</label>
+            <select class="form-input" id="d-leads">
+              <option value="">Approximate...</option>
+              <option>Under 100</option>
+              <option>100 – 500</option>
+              <option>500 – 1,000</option>
+              <option>1,000 – 2,000</option>
+              <option>2,000+</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- GM INFO -->
+        <div class="form-section">General Manager Login</div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">GM First Name</label>
+            <input class="form-input" type="text" id="gm-first" placeholder="James" />
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">GM Last Name</label>
+            <input class="form-input" type="text" id="gm-last" placeholder="Durbin" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label class="form-label">GM Email Address</label>
+          <input class="form-input" type="email" id="gm-email" placeholder="james@dealership.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">GM Temporary Password</label>
+          <input class="form-input" type="text" id="gm-password" placeholder="TempPass2026!" />
+          <div style="font-size:10px;color:var(--text3);margin-top:5px">GM will be prompted to change this on first login</div>
+        </div>
+
+        <button class="btn btn-primary" id="create-btn" onclick="createDealer()">Create Dealer Account →</button>
+        <div class="status-box" id="create-status"></div>
+
+      </div>
+    </div>
+
+    <!-- ADD SALESPERSON TO EXISTING DEALER -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Add Salesperson to Existing Dealer</div>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label class="form-label">Select Dealership</label>
+          <select class="form-input" id="sp-dealer">
+            <option value="">Loading dealers...</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="sp-first" placeholder="Sarah" />
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="sp-last" placeholder="Chen" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="sp-email" placeholder="sarah@dealership.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Temporary Password</label>
+          <input class="form-input" type="text" id="sp-password" placeholder="TempPass2026!" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-input" id="sp-role">
+            <option value="salesperson">Salesperson</option>
+            <option value="manager">Manager / GM</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="sp-btn" onclick="addSalesperson()">Add Team Member →</button>
+        <div class="status-box" id="sp-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: EXISTING DEALERS -->
+  <div style="display:flex;flex-direction:column;gap:20px">
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Active Dealers</div>
+        <div class="panel-tag" id="dealer-count">Loading...</div>
+      </div>
+      <div class="dealer-list" id="dealer-list">
+        <div class="empty">Loading dealers...</div>
+      </div>
+    </div>
+
+    <div class="panel" id="dealer-users-panel" style="display:none">
+      <div class="panel-head">
+        <div class="panel-title" id="dealer-users-title">Team Members</div>
+        <div class="panel-tag" id="dealer-users-count">—</div>
+      </div>
+      <div id="dealer-users-list">
+        <div class="empty">Select a dealer to view their team</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SB = 'https://gmcpsuzkzlowztbtpuve.supabase.co';
+const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtY3BzdXpremxvd3p0YnRwdXZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQxMTMsImV4cCI6MjA5MjA0MDExM30.LCw9s76i625S88afpGnbZaelZ00bdwdXVpx6O4sld4k';
+
+const sbH = {
+  'apikey': SK,
+  'Authorization': `Bearer ${SK}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+function ini(name) {
+  const p = name.trim().split(' ');
+  return `${(p[0]||'?')[0]}${(p[1]||'?')[0]}`.toUpperCase();
+}
+
+function setStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = `status-box ${type}`;
+}
+
+async function sbFetch(path) {
+  const res = await fetch(`${SB}/rest/v1/${path}`, { headers: sbH });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function createAuthUser(email, password) {
+  const res = await fetch(`${SB}/auth/v1/admin/users`, {
+    method: 'POST',
+    headers: { ...sbH, 'apikey': SK },
+    body: JSON.stringify({ email, password, email_confirm: true })
+  });
+  const data = await res.json();
+  return data;
+}
+
+async function loadDealers() {
+  const dealers = await sbFetch('dealerships?select=*&order=created_at.desc');
+  document.getElementById('dealer-count').textContent = `${dealers.length} dealers`;
+
+  const select = document.getElementById('sp-dealer');
+  select.innerHTML = '<option value="">Select dealer...</option>' +
+    dealers.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+
+  const list = document.getElementById('dealer-list');
+  if (!dealers.length) {
+    list.innerHTML = '<div class="empty">No dealers yet — add your first one</div>';
+    return;
+  }
+
+  list.innerHTML = dealers.map(d => `
+    <div class="dealer-item" onclick="loadDealerUsers('${d.id}','${d.name}')">
+      <div class="dealer-avatar">${ini(d.name)}</div>
+      <div class="dealer-info">
+        <div class="dealer-name">${d.name}</div>
+        <div class="dealer-meta">${d.crm_type||'No CRM'} · ${d.address||'No address'}</div>
+      </div>
+      <div class="dealer-status ${d.status==='active'?'active':'trial'}">${d.status||'active'}</div>
+    </div>`).join('');
+}
+
+async function loadDealerUsers(dealerId, dealerName) {
+  const panel = document.getElementById('dealer-users-panel');
+  panel.style.display = 'block';
+  document.getElementById('dealer-users-title').textContent = `${dealerName} — Team`;
+
+  const users = await sbFetch(`users?dealership_id=eq.${dealerId}&select=*&order=role.asc`);
+  document.getElementById('dealer-users-count').textContent = `${users.length} members`;
+
+  document.getElementById('dealer-users-list').innerHTML = users.length ?
+    users.map(u => `
+      <div class="user-item">
+        <div class="user-avatar">${ini(u.full_name)}</div>
+        <div style="flex:1">
+          <div class="user-name">${u.full_name}</div>
+          <div class="user-email">${u.email}</div>
+        </div>
+        <div class="user-role">${u.role}</div>
+      </div>`).join('') :
+    '<div class="empty">No team members yet</div>';
+}
+
+async function createDealer() {
+  const name = document.getElementById('d-name').value.trim();
+  const address = document.getElementById('d-address').value.trim();
+  const phone = document.getElementById('d-phone').value.trim();
+  const crm = document.getElementById('d-crm').value;
+  const gmFirst = document.getElementById('gm-first').value.trim();
+  const gmLast = document.getElementById('gm-last').value.trim();
+  const gmEmail = document.getElementById('gm-email').value.trim();
+  const gmPassword = document.getElementById('gm-password').value.trim();
+
+  if (!name || !gmFirst || !gmEmail || !gmPassword) {
+    setStatus('create-status', 'Please fill in dealership name, GM name, email, and password.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('create-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Creating dealer...';
+  setStatus('create-status', 'Setting up dealership...', 'loading');
+
+  try {
+    // 1. Create dealership
+    const dRes = await fetch(`${SB}/rest/v1/dealerships`, {
+      method: 'POST',
+      headers: sbH,
+      body: JSON.stringify({ name, address, phone, crm_type: crm, industry: 'automotive', status: 'active' })
+    });
+    const dealers = await dRes.json();
+    const dealer = Array.isArray(dealers) ? dealers[0] : dealers;
+
+    if (!dealer?.id) throw new Error('Failed to create dealership');
+
+    setStatus('create-status', 'Dealership created. Setting up GM login...', 'loading');
+
+    // 2. Create GM user record
+    await fetch(`${SB}/rest/v1/users`, {
+      method: 'POST',
+      headers: sbH,
+      body: JSON.stringify({
+        dealership_id: dealer.id,
+        full_name: `${gmFirst} ${gmLast}`,
+        email: gmEmail,
+        role: 'manager'
+      })
+    });
+
+    setStatus('create-status', `
+✅ Dealer created successfully!
+
+Dealership: ${name}
+GM: ${gmFirst} ${gmLast}
+Login Email: ${gmEmail}
+Temporary Password: ${gmPassword}
+
+Share these credentials with the GM. They can log in at ovrsight.net/login.html
+    `, 'success');
+
+    // Clear form
+    ['d-name','d-address','d-phone','gm-first','gm-last','gm-email','gm-password'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('d-crm').value = '';
+
+    loadDealers();
+
+  } catch(err) {
+    setStatus('create-status', 'Error: ' + err.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Create Dealer Account →';
+}
+
+async function addSalesperson() {
+  const dealerId = document.getElementById('sp-dealer').value;
+  const first = document.getElementById('sp-first').value.trim();
+  const last = document.getElementById('sp-last').value.trim();
+  const email = document.getElementById('sp-email').value.trim();
+  const password = document.getElementById('sp-password').value.trim();
+  const role = document.getElementById('sp-role').value;
+
+  if (!dealerId || !first || !email || !password) {
+    setStatus('sp-status', 'Please fill in all fields and select a dealership.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('sp-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Adding team member...';
+  setStatus('sp-status', 'Creating account...', 'loading');
+
+  try {
+    await fetch(`${SB}/rest/v1/users`, {
+      method: 'POST',
+      headers: sbH,
+      body: JSON.stringify({
+        dealership_id: dealerId,
+        full_name: `${first} ${last}`,
+        email,
+        role
+      })
+    });
+
+    setStatus('sp-status', `
+✅ Team member added!
+
+Name: ${first} ${last}
+Email: ${email}
+Password: ${password}
+Role: ${role}
+
+Share these credentials so they can log in at ovrsight.net/login.html
+    `, 'success');
+
+    ['sp-first','sp-last','sp-email','sp-password'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('sp-dealer').value = '';
+
+    loadDealers();
+
+  } catch(err) {
+    setStatus('sp-status', 'Error: ' + err.message, 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Add Team Member →';
+}
+
+loadDealers();
+</script>
+</body>
+</html>
