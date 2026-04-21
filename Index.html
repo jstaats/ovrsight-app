@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ovrsight.ai — Stop Losing Deals You Already Paid For</title>
+<title>Ovrsight.net — Stop Losing Deals You Already Paid For</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
 :root{
@@ -13,193 +13,138 @@
   --border:#ffffff0c;--border2:#ffffff18;
   --text:#e2e6f0;--muted:#6b7280;--dim:#374151;
   --green:#16c97a;--green2:#0fa863;--green-glow:#16c97a22;
-  --amber:#f59e0b;--red:#ef4444;--white:#ffffff;
+  --white:#ffffff;
 }
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,10,14,0.85)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,10,14,0.9)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-mark{width:32px;height:32px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.logo-mark svg{width:18px;height:18px}
-.logo-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--white)}
-.logo-tld{color:var(--green)}
-.nav-links{display:flex;align-items:center;gap:32px}
+.logo-mark{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white)}
+.logo-name span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:28px}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s}
 .nav-links a:hover{color:var(--text)}
-.nav-cta{background:var(--green);color:#000;border:none;border-radius:8px;padding:9px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s}
+.nav-cta{background:var(--green);color:#000;border:none;border-radius:8px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:background 0.2s}
 .nav-cta:hover{background:var(--green2)}
 
+/* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 800px 600px at 50% 40%,#16c97a08 0%,transparent 70%);pointer-events:none}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;opacity:0.4}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-glow);border:0.5px solid #16c97a33;border-radius:100px;padding:6px 16px;font-size:12px;color:var(--green);font-weight:500;margin-bottom:32px;animation:fadeUp 0.6s ease both}
-.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
-.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8.5vw,114px);line-height:0.92;letter-spacing:2px;color:var(--white);margin-bottom:8px;animation:fadeUp 0.6s 0.1s ease both}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 800px 500px at 50% 40%,#16c97a08 0%,transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;opacity:0.35}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-glow);border:0.5px solid #16c97a33;border-radius:100px;padding:6px 16px;font-size:12px;color:var(--green);font-weight:500;margin-bottom:28px;animation:fadeUp 0.6s ease both}
+.hero-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.hero-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,9vw,118px);line-height:0.92;letter-spacing:2px;color:var(--white);margin-bottom:8px;animation:fadeUp 0.6s 0.1s ease both}
 .hero-headline span{color:var(--green)}
-.hero-sub{font-size:clamp(16px,1.8vw,19px);color:var(--muted);max-width:580px;line-height:1.7;margin:28px auto 44px;font-weight:300;animation:fadeUp 0.6s 0.2s ease both}
-.hero-sub strong{color:var(--text);font-weight:500}
+.hero-sub{font-size:clamp(15px,1.8vw,19px);color:var(--muted);max-width:520px;line-height:1.7;margin:24px auto 40px;font-weight:300;animation:fadeUp 0.6s 0.2s ease both}
 .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.6s 0.3s ease both}
-.btn-primary{background:var(--green);color:#000;border:none;border-radius:10px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--green);color:#000;border:none;border-radius:10px;padding:13px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
 .btn-primary:hover{background:var(--green2);transform:translateY(-1px)}
-.btn-ghost{background:transparent;color:var(--text);border:0.5px solid var(--border2);border-radius:10px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;text-decoration:none;transition:all 0.2s}
+.btn-ghost{background:transparent;color:var(--text);border:0.5px solid var(--border2);border-radius:10px;padding:13px 28px;font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;text-decoration:none;transition:all 0.2s}
 .btn-ghost:hover{border-color:#ffffff33;background:#ffffff08}
-.hero-stats{display:flex;gap:56px;justify-content:center;margin-top:80px;animation:fadeUp 0.6s 0.4s ease both;flex-wrap:wrap}
-.hero-stat{text-align:center}
-.hero-stat-num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--white);letter-spacing:1px;line-height:1}
-.hero-stat-num span{color:var(--green)}
-.hero-stat-label{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4;max-width:140px}
-.hero-stat-source{font-size:10px;color:var(--dim);margin-top:3px;font-family:'DM Mono',monospace}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.ticker{border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:14px 0;overflow:hidden;background:var(--dark)}
-.ticker-inner{display:flex;gap:48px;white-space:nowrap;animation:ticker 24s linear infinite}
-.ticker-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;flex-shrink:0}
-.ticker-dot{width:4px;height:4px;border-radius:50%;background:var(--green)}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-.full-bleed{background:var(--dark);padding:100px 0}
-.full-bleed-inner{max-width:1100px;margin:0 auto;padding:0 40px}
-section{padding:100px 40px;max-width:1100px;margin:0 auto}
-.section-label{font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;font-weight:500;margin-bottom:16px;font-family:'DM Mono',monospace}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,58px);color:var(--white);line-height:0.97;letter-spacing:1px;margin-bottom:20px}
-.section-title span{color:var(--green)}
-.section-body{font-size:17px;color:var(--muted);line-height:1.75;max-width:580px;font-weight:300}
-
-/* PROBLEM */
-.problem-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;margin-top:56px}
-.problem-card{background:var(--card);padding:40px 32px}
-.problem-num{font-family:'Bebas Neue',sans-serif;font-size:60px;color:var(--green);line-height:1;margin-bottom:4px}
-.problem-source{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;margin-bottom:16px}
-.problem-title{font-size:16px;font-weight:500;color:var(--white);margin-bottom:10px}
-.problem-body{font-size:14px;color:var(--muted);line-height:1.65}
-
-/* INSIGHT BAND */
-.insight-band{background:var(--green-glow);border-top:0.5px solid #16c97a22;border-bottom:0.5px solid #16c97a22;padding:48px 40px;text-align:center}
-.insight-band-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,42px);color:var(--white);letter-spacing:1px;line-height:1.1;max-width:900px;margin:0 auto}
-.insight-band-text span{color:var(--green)}
-.insight-band-sub{font-size:15px;color:var(--muted);margin-top:16px;font-weight:300}
+/* STATS */
+.stats{background:var(--dark);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:56px 40px}
+.stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.stat{text-align:center;padding:0 40px;border-right:0.5px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--white);line-height:1;margin-bottom:6px}
+.stat-num span{color:var(--green)}
+.stat-label{font-size:13px;color:var(--muted);line-height:1.5;max-width:180px;margin:0 auto}
+.stat-source{font-size:10px;color:var(--dim);margin-top:5px;font-family:'DM Mono',monospace}
 
 /* FEATURES */
-.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:56px}
-.feature-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:36px;transition:border-color 0.2s,background 0.2s}
-.feature-card:hover{border-color:#16c97a33;background:#13171f}
-.feature-card.wide{grid-column:span 2}
-.feature-icon{width:44px;height:44px;border-radius:10px;background:var(--green-glow);border:0.5px solid #16c97a22;display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:20px}
-.feature-title{font-size:17px;font-weight:500;color:var(--white);margin-bottom:12px;letter-spacing:-0.2px}
-.feature-body{font-size:14px;color:var(--muted);line-height:1.7}
-.feature-detail{font-size:13px;color:var(--muted);line-height:1.65;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);font-style:italic}
+.features{padding:100px 40px;max-width:1000px;margin:0 auto}
+.section-label{font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;font-weight:500;margin-bottom:14px;font-family:'DM Mono',monospace;text-align:center}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,54px);color:var(--white);line-height:0.97;letter-spacing:1px;margin-bottom:48px;text-align:center}
+.section-title span{color:var(--green)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:32px;transition:border-color 0.2s}
+.feature-card:hover{border-color:#16c97a33}
+.feature-icon{font-size:28px;margin-bottom:18px}
+.feature-title{font-size:16px;font-weight:500;color:var(--white);margin-bottom:10px}
+.feature-body{font-size:14px;color:var(--muted);line-height:1.65}
 
-/* HOW IT WORKS */
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative}
-.steps::before{content:'';position:absolute;top:28px;left:12.5%;right:12.5%;height:0.5px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.3}
-.step{text-align:center;padding:0 20px}
-.step-num{width:56px;height:56px;border-radius:50%;background:var(--card2);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--green);position:relative;z-index:1}
-.step-title{font-size:15px;font-weight:500;color:var(--white);margin-bottom:10px}
-.step-body{font-size:13px;color:var(--muted);line-height:1.65}
-
-/* DASHBOARD PREVIEW */
-.preview{background:var(--card);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;margin-top:56px}
-.preview-bar{background:var(--card2);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:8px}
-.preview-dot{width:10px;height:10px;border-radius:50%}
-.preview-body{padding:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.preview-stat{background:var(--dark);border:0.5px solid var(--border);border-radius:10px;padding:16px}
-.preview-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;font-family:'DM Mono',monospace}
-.preview-stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1}
-.preview-leads{grid-column:span 4;background:var(--dark);border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
-.preview-lead-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:0.5px solid var(--border)}
-.preview-lead-row:last-child{border-bottom:none}
-.preview-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
-.preview-lead-name{font-size:13px;font-weight:500;flex:1}
-.preview-lead-detail{font-size:12px;color:var(--muted);flex:1.5}
-.preview-score{font-family:'Bebas Neue',sans-serif;font-size:24px;min-width:40px;text-align:right}
-.preview-chip{font-size:10px;border-radius:5px;padding:3px 9px;font-weight:500;margin-left:8px}
-.preview-alert{font-size:11px;color:var(--green);background:var(--green-glow);border-radius:5px;padding:3px 8px;margin-left:4px}
-
-/* QUOTE */
-.quote-band{background:var(--dark);padding:100px 0}
-.quote-inner{max-width:820px;margin:0 auto;padding:0 40px;text-align:center}
-.quote-mark{font-family:'Bebas Neue',sans-serif;font-size:80px;color:var(--green);line-height:0.6;margin-bottom:24px;opacity:0.4}
-.quote-text{font-size:clamp(20px,3vw,30px);color:var(--white);line-height:1.35;font-weight:300;font-style:italic;margin-bottom:28px}
-.quote-text strong{font-weight:500;font-style:normal;color:var(--green)}
+/* TESTIMONIALS */
+.testimonials{background:var(--dark);padding:100px 40px;overflow:hidden}
+.testimonials-inner{max-width:800px;margin:0 auto;text-align:center}
+.carousel{position:relative;min-height:220px}
+.carousel-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:translateX(60px);transition:all 0.6s ease;pointer-events:none}
+.carousel-slide.active{opacity:1;transform:translateX(0);pointer-events:all;position:relative}
+.carousel-slide.exit{opacity:0;transform:translateX(-60px)}
+.quote-mark{font-family:'Bebas Neue',sans-serif;font-size:64px;color:var(--green);line-height:0.6;margin-bottom:20px;opacity:0.4}
+.quote-text{font-size:clamp(18px,2.5vw,24px);color:var(--white);line-height:1.4;font-weight:300;font-style:italic;margin-bottom:24px;max-width:640px}
+.quote-text strong{color:var(--green);font-style:normal;font-weight:500}
 .quote-attr{font-size:13px;color:var(--muted);font-family:'DM Mono',monospace}
-
-/* CTA BAND */
-.cta-band{padding:100px 0}
-.cta-band-inner{max-width:720px;margin:0 auto;padding:0 40px;text-align:center}
-.cta-band-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,6vw,76px);color:var(--white);line-height:0.95;letter-spacing:2px;margin-bottom:28px}
-.cta-band-title span{color:var(--green)}
-.cta-band-body{font-size:18px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:44px;max-width:560px;margin-left:auto;margin-right:auto}
-.cta-features{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin-bottom:44px}
-.cta-feature{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--muted)}
-.cta-check{width:20px;height:20px;border-radius:50%;background:var(--green-glow);border:0.5px solid #16c97a44;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);flex-shrink:0}
-.cta-note{font-size:13px;color:var(--dim);margin-top:20px}
+.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:32px}
+.carousel-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);cursor:pointer;transition:background 0.2s,transform 0.2s}
+.carousel-dot.active{background:var(--green);transform:scale(1.3)}
+.carousel-arrows{display:flex;justify-content:center;gap:12px;margin-top:20px}
+.carousel-arrow{background:var(--card);border:0.5px solid var(--border2);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;transition:all 0.2s}
+.carousel-arrow:hover{border-color:#16c97a33;color:var(--green)}
 
 /* DEMO FORM */
-.demo{background:var(--dark);padding:100px 0}
-.demo-inner{max-width:640px;margin:0 auto;padding:0 40px}
+.demo{padding:100px 40px;max-width:600px;margin:0 auto}
 .demo-card{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:48px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-group{margin-bottom:20px}
-.form-label{font-size:11px;color:var(--muted);margin-bottom:8px;display:block;text-transform:uppercase;letter-spacing:0.8px;font-family:'DM Mono',monospace}
-.form-input{width:100%;background:var(--dark);border:0.5px solid var(--border2);border-radius:8px;padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
-.form-input:focus{border-color:#16c97a66}
+.form-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);letter-spacing:1px;margin-bottom:6px;text-align:center}
+.form-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:11px;color:var(--muted);margin-bottom:7px;display:block;text-transform:uppercase;letter-spacing:0.7px;font-family:'DM Mono',monospace}
+.form-input{width:100%;background:var(--dark);border:0.5px solid var(--border2);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:#16c97a55}
 .form-input::placeholder{color:var(--dim)}
 select.form-input option{background:var(--dark)}
-.form-submit{width:100%;background:var(--green);color:#000;border:none;border-radius:10px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.form-submit{width:100%;background:var(--green);color:#000;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;margin-top:8px}
 .form-submit:hover{background:var(--green2)}
-.form-note{font-size:12px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.5}
-.form-success{display:none;text-align:center;padding:48px 0}
-.form-success-icon{font-size:52px;margin-bottom:20px}
-.form-success-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);margin-bottom:12px;letter-spacing:1px}
-.form-success-body{font-size:15px;color:var(--muted);line-height:1.65}
+.form-note{font-size:11px;color:var(--dim);text-align:center;margin-top:12px;line-height:1.5}
+.form-success{display:none;text-align:center;padding:40px 0}
+.form-success-icon{font-size:44px;margin-bottom:16px}
+.form-success-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--white);margin-bottom:8px;letter-spacing:1px}
+.form-success-body{font-size:14px;color:var(--muted);line-height:1.6}
 
-footer{border-top:0.5px solid var(--border);padding:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white)}
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--white)}
 .footer-logo span{color:var(--green)}
 .footer-copy{font-size:12px;color:var(--dim)}
-.footer-links{display:flex;gap:24px}
-.footer-links a{font-size:12px;color:var(--dim);text-decoration:none;transition:color 0.2s}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--dim);text-decoration:none}
 .footer-links a:hover{color:var(--muted)}
 
-.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:0.1s}
-.reveal-delay-2{transition-delay:0.2s}
 
 @media(max-width:768px){
   nav{padding:0 20px}
   .nav-links{display:none}
-  section,.full-bleed-inner,.quote-inner,.cta-band-inner,.demo-inner{padding-left:20px;padding-right:20px}
-  .problem-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:0.5px solid var(--border);padding:24px 0}
+  .stat:last-child{border-bottom:none}
   .features-grid{grid-template-columns:1fr}
-  .feature-card.wide{grid-column:span 1}
-  .steps{grid-template-columns:1fr 1fr;gap:32px}
-  .steps::before{display:none}
   .form-row{grid-template-columns:1fr}
-  .preview-body{grid-template-columns:1fr 1fr}
-  .preview-leads{grid-column:span 2}
-  .cta-features{gap:16px;flex-direction:column;align-items:center}
-  footer{flex-direction:column;text-align:center;padding:32px 20px}
-  .hero-stats{gap:32px}
+  .demo-card{padding:28px}
+  footer{flex-direction:column;text-align:center;padding:24px 20px}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
     <div class="logo-mark">
       <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#000" stroke-width="1.5"/><circle cx="9" cy="9" r="2.5" fill="#000"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
     </div>
-    <span class="logo-name">Ovrsight<span class="logo-tld">.ai</span></span>
+    <span class="logo-name">Ovrsight<span>.net</span></span>
   </a>
   <div class="nav-links">
-    <a href="#problem">The Problem</a>
-    <a href="#features">Platform</a>
-    <a href="#how">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#testimonials">Results</a>
     <a href="#demo">Get a Demo</a>
   </div>
   <a href="#demo" class="nav-cta">Request Demo</a>
@@ -211,331 +156,230 @@ footer{border-top:0.5px solid var(--border);padding:40px;display:flex;align-item
   <div class="hero-grid"></div>
   <div class="hero-badge"><div class="hero-badge-dot"></div>AI Sales Intelligence for Automotive Dealers</div>
   <div class="hero-headline">STOP LOSING<br>DEALS YOU<br><span>ALREADY PAID FOR.</span></div>
-  <p class="hero-sub">Your store spends <strong>hundreds of dollars per lead</strong> to fill the pipeline. Ovrsight.ai makes sure every one of those leads gets worked — with AI that scores, tracks, and alerts your team before the deal walks out the door.</p>
+  <p class="hero-sub">Your store spends hundreds of dollars per lead. Ovrsight.net makes sure every one gets worked — with AI that scores, tracks, and alerts your team before the deal walks out the door.</p>
   <div class="hero-actions">
     <a href="#demo" class="btn-primary">Request a Demo →</a>
-    <a href="#problem" class="btn-ghost">See the Problem</a>
-  </div>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>27</span>%</div>
-      <div class="hero-stat-label">of inbound phone leads are never logged</div>
-      <div class="hero-stat-source">Cox Automotive</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>40</span>%</div>
-      <div class="hero-stat-label">of leads lost to poor follow-up process</div>
-      <div class="hero-stat-source">NADA Dealer Study</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>$600</span>+</div>
-      <div class="hero-stat-label">average cost per lead in marketing spend</div>
-      <div class="hero-stat-source">Automotive Marketing Report</div>
-    </div>
+    <a href="#features" class="btn-ghost">See How It Works</a>
   </div>
 </div>
 
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
-    <div class="ticker-item"><div class="ticker-dot"></div>AI lead scoring</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Missed lead recovery</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Real-time pipeline alerts</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Inventory-matched outreach</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>CRM integration</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Salesperson accountability</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>GM command center</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Automated follow-up</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>AI lead scoring</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Missed lead recovery</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Real-time pipeline alerts</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Inventory-matched outreach</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>CRM integration</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Salesperson accountability</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>GM command center</div>
-    <div class="ticker-item"><div class="ticker-dot"></div>Automated follow-up</div>
-  </div>
-</div>
-
-<!-- PROBLEM -->
-<div class="full-bleed" id="problem">
-  <div class="full-bleed-inner">
-    <div class="reveal">
-      <div class="section-label">The Problem</div>
-      <div class="section-title">YOUR PIPELINE HAS<br>A <span>EXPENSIVE</span> LEAK</div>
-      <p class="section-body">Most dealerships focus their energy on generating more leads. The real opportunity is in the leads you're already paying for — and quietly losing every day.</p>
+<!-- STATS -->
+<div class="stats reveal">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-num"><span>27</span>%</div>
+      <div class="stat-label">of inbound phone leads are never logged in your CRM</div>
+      <div class="stat-source">Cox Automotive Research</div>
     </div>
-    <div class="problem-grid reveal">
-      <div class="problem-card">
-        <div class="problem-num">27%</div>
-        <div class="problem-source">Cox Automotive Research</div>
-        <div class="problem-title">Of phone leads never make it into your CRM</div>
-        <div class="problem-body">A distracted salesperson, an overwhelmed receptionist, a misrouted call. These leads simply disappear — and you keep paying to replace them with new ones.</div>
-      </div>
-      <div class="problem-card">
-        <div class="problem-num">40%</div>
-        <div class="problem-source">NADA Annual Dealer Study</div>
-        <div class="problem-title">Of leads in your pipeline are lost to poor follow-up</div>
-        <div class="problem-body">Leads that were logged are being left to go cold. Without a system to prioritize and prompt your team, even the warmest prospects slip away to a competitor who follows up first.</div>
-      </div>
-      <div class="problem-card">
-        <div class="problem-num">$600+</div>
-        <div class="problem-source">Automotive Marketing Report</div>
-        <div class="problem-title">Is what you spend acquiring each lead</div>
-        <div class="problem-body">Every missed follow-up, every unlogged call, every lead that goes cold — that's hundreds of dollars in marketing spend evaporating. Ovrsight.ai protects that investment.</div>
-      </div>
+    <div class="stat">
+      <div class="stat-num"><span>40</span>%</div>
+      <div class="stat-label">of leads lost to poor follow-up process every month</div>
+      <div class="stat-source">NADA Annual Dealer Study</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span>$600</span>+</div>
+      <div class="stat-label">average cost per lead in marketing spend</div>
+      <div class="stat-source">Automotive Marketing Report</div>
     </div>
   </div>
-</div>
-
-<!-- INSIGHT BAND -->
-<div class="insight-band">
-  <div class="insight-band-text reveal">
-    Dealers who <span>actively work their existing pipeline</span> close 23% more deals — without spending a dollar more on marketing.
-  </div>
-  <p class="insight-band-sub reveal reveal-delay-1">Cox Automotive Annual Dealer Satisfaction Study</p>
 </div>
 
 <!-- FEATURES -->
-<section id="features">
+<div class="features" id="features">
   <div class="reveal">
     <div class="section-label">The Platform</div>
-    <div class="section-title">COMPLETE VISIBILITY.<br>FROM FIRST LEAD TO <span>CLOSED DEAL.</span></div>
-    <p class="section-body">Ovrsight.ai gives your management team and your sales floor everything they need to work every lead with precision — without adding headcount or complexity.</p>
+    <div class="section-title">EVERYTHING YOU NEED TO<br><span>WORK EVERY LEAD.</span></div>
   </div>
-  <div class="features-grid">
-    <div class="feature-card wide reveal">
+  <div class="features-grid reveal">
+    <div class="feature-card">
       <div class="feature-icon">🧠</div>
-      <div class="feature-title">AI Lead Scoring — Know Who to Call Before They Do</div>
-      <div class="feature-body">Every lead in your pipeline receives an AI-generated priority score based on behavioral signals, lead source, engagement history, recency, and inventory interest. Your team starts each day knowing exactly where to focus — not guessing.</div>
-      <div class="feature-detail">Scores update automatically as leads engage with your website, respond to outreach, or as new interactions are logged. The hotter a lead gets, the higher they rise — and your salespeople are alerted immediately.</div>
+      <div class="feature-title">AI Lead Scoring</div>
+      <div class="feature-body">Every lead gets a real-time priority score based on behavior, engagement, source, and vehicle interest. Your team always knows who to call first — and why.</div>
     </div>
-    <div class="feature-card reveal">
+    <div class="feature-card">
       <div class="feature-icon">🛡️</div>
-      <div class="feature-title">Safety Net — No Lead Left Behind</div>
-      <div class="feature-body">Ovrsight monitors every inbound call, form submission, and chat. If a lead isn't logged within a defined window, the system flags it and logs it automatically. Your pipeline stays clean and complete — without relying on anyone to remember.</div>
+      <div class="feature-title">Safety Net</div>
+      <div class="feature-body">AI monitors every inbound call, form, and chat. If a lead isn't logged within two hours, Ovrsight catches it automatically. Nothing falls through the cracks.</div>
     </div>
-    <div class="feature-card reveal reveal-delay-1">
-      <div class="feature-icon">🔔</div>
-      <div class="feature-title">Real-Time Pipeline Alerts</div>
-      <div class="feature-body">When a prospect returns to your website, views specific inventory, or re-engages after going quiet — your salesperson receives an instant alert with full context. Who they are, what they're looking at, and what to say next.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">🚗</div>
-      <div class="feature-title">Inventory-Matched Outreach</div>
-      <div class="feature-body">When a price changes or new inventory arrives that matches what a prospect was shopping for, Ovrsight automatically sends a personalized notification. Relevant, timely communication — delivered without lifting a finger.</div>
-    </div>
-    <div class="feature-card reveal reveal-delay-1">
+    <div class="feature-card">
       <div class="feature-icon">📊</div>
       <div class="feature-title">GM Command Center</div>
-      <div class="feature-body">A single dashboard built for ownership and management. See your full pipeline at a glance — which leads are being worked, which are at risk, which salespeople need attention, and where deals are stalling. Run a tighter operation with full visibility.</div>
-    </div>
-    <div class="feature-card wide reveal">
-      <div class="feature-icon">🔗</div>
-      <div class="feature-title">CRM Integration — Works With What You Already Have</div>
-      <div class="feature-body">Ovrsight connects directly to VinSolutions, DealerSocket, Elead, DealerTrack, and more. Lead data flows in automatically. Scores and insights flow back. Your team keeps working in the tools they know — Ovrsight works quietly in the background, making everything smarter.</div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<div class="full-bleed" id="how">
-  <div class="full-bleed-inner">
-    <div class="reveal">
-      <div class="section-label">How It Works</div>
-      <div class="section-title">OPERATIONAL IN DAYS.<br><span>RESULTS</span> FROM DAY ONE.</div>
-      <p class="section-body">We handle the setup. Your team doesn't change how they work — they just start working smarter.</p>
-    </div>
-    <div class="steps reveal">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Connect Your CRM</div>
-        <div class="step-body">We integrate with your existing CRM and data sources. Your leads begin flowing into Ovrsight automatically — no manual imports, no disruption to your team.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">AI Scores Every Lead</div>
-        <div class="step-body">Our AI analyzes every lead against a comprehensive set of behavioral and engagement signals — assigning a priority score that updates in real time as conditions change.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">Your Team Gets Clarity</div>
-        <div class="step-body">Salespeople receive prioritized lead lists and real-time alerts — with the full context they need to have a meaningful conversation, not a cold call.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-title">You See Everything</div>
-        <div class="step-body">Management gets a clear, real-time view of pipeline health, team activity, and deals at risk — so nothing falls through the cracks and no one flies blind.</div>
-      </div>
-    </div>
-
-    <div class="preview reveal">
-      <div class="preview-bar">
-        <div class="preview-dot" style="background:#ef4444"></div>
-        <div class="preview-dot" style="background:#f59e0b"></div>
-        <div class="preview-dot" style="background:#16c97a"></div>
-        <span style="font-size:12px;color:var(--muted);margin-left:8px;font-family:'DM Mono',monospace">ovrsight.ai — GM Dashboard</span>
-      </div>
-      <div class="preview-body">
-        <div class="preview-stat">
-          <div class="preview-stat-label">Active Leads</div>
-          <div class="preview-stat-num" style="color:var(--green)">142</div>
-        </div>
-        <div class="preview-stat">
-          <div class="preview-stat-label">Require Attention</div>
-          <div class="preview-stat-num" style="color:var(--red)">7</div>
-        </div>
-        <div class="preview-stat">
-          <div class="preview-stat-label">Recovered This Mo.</div>
-          <div class="preview-stat-num" style="color:var(--amber)">19</div>
-        </div>
-        <div class="preview-stat">
-          <div class="preview-stat-label">Closed This Mo.</div>
-          <div class="preview-stat-num" style="color:var(--white)">18</div>
-        </div>
-        <div class="preview-leads">
-          <div class="preview-lead-row">
-            <div class="preview-avatar" style="background:#ef444422;color:var(--red)">MJ</div>
-            <div class="preview-lead-name">Michael Johnson</div>
-            <div class="preview-lead-detail">2025 Silverado LTZ · Viewing inventory now · Last contacted 3 days ago</div>
-            <div class="preview-score" style="color:var(--red)">92</div>
-            <div class="preview-chip" style="background:#ef444422;color:var(--red)">Critical</div>
-          </div>
-          <div class="preview-lead-row">
-            <div class="preview-avatar" style="background:#f59e0b22;color:var(--amber)">SA</div>
-            <div class="preview-lead-name">Sofia Andersen</div>
-            <div class="preview-lead-detail">2024 Ford Escape SE · Price reduced $1,200 · Alert sent automatically</div>
-            <div class="preview-score" style="color:var(--amber)">78</div>
-            <div class="preview-chip" style="background:#f59e0b22;color:var(--amber)">Follow Up</div>
-          </div>
-          <div class="preview-lead-row">
-            <div class="preview-avatar" style="background:#16c97a22;color:var(--green)">KL</div>
-            <div class="preview-lead-name">Kevin Liu</div>
-            <div class="preview-lead-detail">New inbound · Chat inquiry · Not yet contacted</div>
-            <div class="preview-score" style="color:var(--green)">74</div>
-            <div class="preview-alert">New</div>
-          </div>
-        </div>
-      </div>
+      <div class="feature-body">A single dashboard built for ownership and management. See your full pipeline, team activity, deals at risk, and AI recommendations — every morning.</div>
     </div>
   </div>
 </div>
 
-<!-- QUOTE -->
-<div class="quote-band">
-  <div class="quote-inner reveal">
-    <div class="quote-mark">"</div>
-    <div class="quote-text">We were generating strong lead volume but couldn't tell you where half of them went. Now we have <strong>full visibility into every lead</strong> from the moment it comes in — and our team is finally working the pipeline the way it should be worked.</div>
-    <div class="quote-attr">— General Manager, Midwest Ford Dealership · Pilot Customer</div>
-  </div>
-</div>
+<!-- TESTIMONIALS -->
+<div class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-label reveal">What GMs Are Saying</div>
+    <div class="carousel reveal" id="carousel">
 
-<!-- CTA BAND -->
-<div class="cta-band">
-  <div class="cta-band-inner reveal">
-    <div class="section-label" style="text-align:center">Get Started</div>
-    <div class="cta-band-title">YOUR NEXT DEAL<br>IS ALREADY IN<br>YOUR <span>PIPELINE.</span></div>
-    <p class="cta-band-body">Start a free 30-day pilot using your actual store data. We handle the integration, the setup, and the onboarding. You just watch what you've been missing.</p>
-    <div class="cta-features">
-      <div class="cta-feature"><div class="cta-check">✓</div>Free 30-day pilot</div>
-      <div class="cta-feature"><div class="cta-check">✓</div>No credit card required</div>
-      <div class="cta-feature"><div class="cta-check">✓</div>We handle the full setup</div>
-      <div class="cta-feature"><div class="cta-check">✓</div>No long-term commitment</div>
+      <div class="carousel-slide active">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">We were generating strong lead volume but had no idea where half of them went. Now we have <strong>full visibility into every lead</strong> from the moment it comes in.</div>
+        <div class="quote-attr">— General Manager, Midwest Ford Dealership</div>
+      </div>
+
+      <div class="carousel-slide">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">Our salespeople used to guess who to call. Now they open Ovrsight every morning and their <strong>entire day is already prioritized for them.</strong></div>
+        <div class="quote-attr">— Dealer Principal, Southeast Chevrolet Group</div>
+      </div>
+
+      <div class="carousel-slide">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">We closed <strong>three deals in the first week</strong> from leads that had been sitting cold in our CRM for over a month. The AI found them, we closed them.</div>
+        <div class="quote-attr">— Sales Manager, Texas Toyota Dealership</div>
+      </div>
+
+      <div class="carousel-slide">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">The ROI was immediate. We spend over <strong>$600 per lead on marketing.</strong> Ovrsight paid for itself the first time it caught a missed phone lead that turned into a sale.</div>
+        <div class="quote-attr">— General Manager, Mid-Atlantic Honda Group</div>
+      </div>
+
     </div>
-    <a href="#demo" class="btn-primary" style="font-size:16px;padding:16px 40px">Request Your Free Demo →</a>
-    <p class="cta-note">We'll follow up within 24 hours to schedule a walkthrough using your store's data.</p>
+
+    <div class="carousel-dots" id="carousel-dots"></div>
+    <div class="carousel-arrows">
+      <div class="carousel-arrow" onclick="prevSlide()">←</div>
+      <div class="carousel-arrow" onclick="nextSlide()">→</div>
+    </div>
   </div>
 </div>
 
 <!-- DEMO FORM -->
 <div class="demo" id="demo">
-  <div class="demo-inner">
-    <div class="reveal" style="text-align:center;margin-bottom:48px">
-      <div class="section-label">Request a Demo</div>
-      <div class="section-title">LET'S TALK<br>ABOUT <span>YOUR STORE</span></div>
-      <p style="font-size:16px;color:var(--muted);margin-top:20px;font-weight:300;line-height:1.7">Tell us a bit about your dealership and we'll put together a personalized demo using your actual data — so you can see exactly what you're currently missing.</p>
-    </div>
-    <div class="demo-card reveal">
-      <div id="demo-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <input class="form-input" type="text" id="fname" placeholder="John" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" id="lname" placeholder="Smith" />
-          </div>
+  <div class="demo-card reveal">
+    <div id="demo-form">
+      <div class="form-title">REQUEST A DEMO</div>
+      <p class="form-sub">We'll set up a personalized walkthrough using your actual store data. No commitment, no credit card.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="fname" placeholder="John" />
         </div>
         <div class="form-group">
-          <label class="form-label">Dealership Name</label>
-          <input class="form-input" type="text" id="dealer" placeholder="Metro Ford" />
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="lname" placeholder="Smith" />
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Work Email</label>
-            <input class="form-input" type="email" id="email" placeholder="john@dealership.com" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input class="form-input" type="tel" id="phone" placeholder="(317) 555-0100" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">CRM System</label>
-            <select class="form-input" id="crm">
-              <option value="">Select your CRM...</option>
-              <option>VinSolutions</option>
-              <option>DealerSocket</option>
-              <option>Elead</option>
-              <option>DealerTrack</option>
-              <option>Tekion</option>
-              <option>Reynolds & Reynolds</option>
-              <option>Other</option>
-              <option>No CRM currently</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Monthly Lead Volume</label>
-            <select class="form-input" id="leads">
-              <option value="">Approximate volume...</option>
-              <option>Under 100</option>
-              <option>100 – 500</option>
-              <option>500 – 1,000</option>
-              <option>1,000 – 2,000</option>
-              <option>2,000+</option>
-            </select>
-          </div>
-        </div>
-        <button class="form-submit" onclick="submitDemo()">Request My Free Demo →</button>
-        <p class="form-note">Your information is used solely to prepare your personalized demo.<br>We do not share or sell your data.</p>
       </div>
-      <div class="form-success" id="demo-success">
-        <div class="form-success-icon">✅</div>
-        <div class="form-success-title">Request Received</div>
-        <p class="form-success-body">Thank you for your interest in Ovrsight.ai. A member of our team will be in touch within 24 hours to schedule your personalized demo. Check your inbox.</p>
+      <div class="form-group">
+        <label class="form-label">Dealership Name</label>
+        <input class="form-input" type="text" id="dealer" placeholder="Metro Ford" />
       </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input class="form-input" type="email" id="email" placeholder="john@dealership.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" id="phone" placeholder="(317) 555-0100" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">CRM System</label>
+          <select class="form-input" id="crm">
+            <option value="">Select your CRM...</option>
+            <option>VinSolutions</option>
+            <option>DealerSocket</option>
+            <option>Elead</option>
+            <option>DealerTrack</option>
+            <option>Tekion</option>
+            <option>Reynolds & Reynolds</option>
+            <option>Other</option>
+            <option>No CRM currently</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monthly Lead Volume</label>
+          <select class="form-input" id="leads">
+            <option value="">Approximate volume...</option>
+            <option>Under 100</option>
+            <option>100 – 500</option>
+            <option>500 – 1,000</option>
+            <option>1,000 – 2,000</option>
+            <option>2,000+</option>
+          </select>
+        </div>
+      </div>
+      <button class="form-submit" onclick="submitDemo()">Request My Free Demo →</button>
+      <p class="form-note">No spam. No commitment. We'll reach out within 24 hours.</p>
+    </div>
+    <div class="form-success" id="demo-success">
+      <div class="form-success-icon">✅</div>
+      <div class="form-success-title">REQUEST RECEIVED</div>
+      <p class="form-success-body">Thank you for your interest in Ovrsight.net. We'll be in touch within 24 hours to schedule your personalized demo.</p>
     </div>
   </div>
 </div>
 
 <footer>
-  <div class="footer-logo">Ovrsight<span>.ai</span></div>
-  <div class="footer-copy">© 2026 Ovrsight.ai — All rights reserved</div>
+  <div class="footer-logo">Ovrsight<span>.net</span></div>
+  <div class="footer-copy">© 2026 Ovrsight.net — All rights reserved</div>
   <div class="footer-links">
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms of Use</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
     <a href="mailto:jonah.staats@gmail.com">Contact</a>
   </div>
 </footer>
 
 <script>
+// SCROLL REVEAL
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// CAROUSEL
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const dotsContainer = document.getElementById('carousel-dots');
+let autoTimer;
+
+// Build dots
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+});
+
+function goToSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  slides[currentSlide].classList.add('exit');
+  setTimeout(() => slides[currentSlide === slides.length - 1 && n === 0 ? slides.length - 1 : currentSlide].classList.remove('exit'), 600);
+
+  document.querySelectorAll('.carousel-dot')[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  document.querySelectorAll('.carousel-dot')[currentSlide].classList.add('active');
+
+  resetTimer();
+}
+
+function nextSlide() {
+  const next = (currentSlide + 1) % slides.length;
+  goToSlide(next);
+}
+
+function prevSlide() {
+  const prev = (currentSlide - 1 + slides.length) % slides.length;
+  goToSlide(prev);
+}
+
+function resetTimer() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(nextSlide, 10000);
+}
+
+// Auto advance every 5 seconds
+autoTimer = setInterval(nextSlide, 10000);
+
+// FORM
 async function submitDemo() {
   const fname = document.getElementById('fname').value.trim();
   const lname = document.getElementById('lname').value.trim();
@@ -546,7 +390,7 @@ async function submitDemo() {
   const leads = document.getElementById('leads').value;
 
   if (!fname || !lname || !email || !dealer) {
-    alert('Please complete the required fields — name, dealership, and email — to continue.');
+    alert('Please fill in your name, dealership, and email to continue.');
     return;
   }
 
@@ -555,7 +399,7 @@ async function submitDemo() {
   btn.disabled = true;
 
   try {
-    await fetch('https://formspree.io/f/xpwzgkpj', {
+    await fetch('https://formspree.io/f/mreraklr', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -563,7 +407,7 @@ async function submitDemo() {
         dealership: dealer,
         email, phone, crm,
         monthly_leads: leads,
-        _subject: `Demo Request — ${dealer} — Ovrsight.ai`,
+        _subject: `Demo Request — ${dealer} — Ovrsight.net`,
         _replyto: email
       })
     });
@@ -572,7 +416,7 @@ async function submitDemo() {
   } catch(err) {
     btn.textContent = 'Request My Free Demo →';
     btn.disabled = false;
-    alert('Something went wrong. Please contact jonah.staats@gmail.com directly.');
+    alert('Something went wrong. Please email jonah.staats@gmail.com directly.');
   }
 }
 </script>
